@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ match.title }}</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .iframe-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .title {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 10;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="iframe-container">
+        <iframe 
+            src="{{ match.live_stream_url }}" 
+            frameborder="0" 
+            allowfullscreen>
+            Your browser does not support iframes.
+        </iframe>
+        <div class="title">{{ match.title }}</div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+

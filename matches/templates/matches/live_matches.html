@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Live Football Matches{% endblock %}
+
+{% block content %}
+<h2>Live Matches</h2>
+
+{% if matches %}
+    <ul>
+        {% for match in matches %}
+        <li>
+            {{ match.title }} - {{ match.date }}
+            <div>
+                <video width="600" height="400" controls>
+                    <source src="{{ match.live_stream_url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No live matches currently available.</p>
+{% endif %}
+{% endblock %}

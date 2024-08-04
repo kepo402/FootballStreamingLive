@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Football Matches{% endblock %}
+
+{% block content %}
+<nav class="mb-4" style="padding: 10px; background-color: #f8f9fa;">
+    <ul class="nav">
+        <li class="nav-item"><a class="nav-link" href="{% url 'match_list' %}">All Matches</a></li>
+    </ul>
+</nav>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px;">
+    <!-- Main Content: Match List -->
+    <div style="flex: 2; min-width: 65%; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <h2>Featured Match</h2>
+        {% if featured_match %}
+            <div style="margin-bottom: 20px;">
+                <img src="{{ featured_match.live_stream_url }}" alt="Featured Match Image" style="width: 100%; height: auto; border-radius: 8px;">
+                <h3>{{ featured_match.title }}</h3>
+                <p>League: {{ featured_match.league }}</p>
+                <p>
+                    {% if featured_match.is_live %}
+                        Live Now
+                        {% if featured_match.live_stream_url %}
+                            - <a href="{% url 'match_detail' featured_match.id %}" target="_blank" style="color: #007bff; text-decoration: none;">Watch Live</a>
+                        {% endif %}
+                    {% else %}
+                        Starts in {{ featured_match.date|timesince }} hours
+                    {% endif %}
+                </p>
+            </div>
+        {% else %}
+            <p>No featured match available.</p>
+        {% endif %}
+
+        <h2>Upcoming Matches</h2>
+        {% if matches %}
+            {% regroup matches by league as league_groups %}
+            {% for league_group in league_groups %}
+                <h3>{{ league_group.grouper }}</h3>
+                <ul style="list-style: none; padding: 0;">
+                    {% for match in league_group.list %}
+                        <li style="margin-bottom: 10px;">
+                            {{ match.title }} - {{ match.date }}
+                            {% if match.is_live %}
+                                (Live Now
+                                {% if match.live_stream_url %}
+                                    - <a href="{% url 'match_detail' match.id %}" target="_blank" style="color: #007bff; text-decoration: none;">Watch Live</a>
+                                {% endif %}
+                                )
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        {% else %}
+            <p>No matches currently available.</p>
+        {% endif %}
+    </div>
+
+    <!-- Sidebar: Blog Posts -->
+    <div style="flex: 1; min-width: 30%; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <h2>Sport News Blog</h2>
+        {% if blog_posts %}
+            <div>
+                {% for blog_post in blog_posts %}
+                    <div style="margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                        <img src="{{ blog_post.image_url }}" alt="Blog Post Image" style="width: 100%; height: auto; border-radius: 8px;">
+                        <h3 style="margin-top: 10px;">{{ blog_post.title }}</h3>
+                        <p>{{ blog_post.content|truncatewords:30 }}</p>
+                        <a href="{% url 'blog_post_detail' blog_post.pk %}" style="color: #007bff; text-decoration: none;">Read more</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No blog posts available.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
