@@ -17,7 +17,7 @@
 </nav>
 
 <div style="display: flex; flex-wrap: wrap; gap: 20px;">
-    <!-- Main Content: Match List -->
+    <!-- Main Content: Live and Upcoming Matches -->
     <div style="flex: 2; min-width: 65%; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
         <h2>Featured Match</h2>
         {% if featured_match %}
@@ -46,32 +46,39 @@
             <p>No featured match available.</p>
         {% endif %}
 
+        <h2>Live Matches</h2>
+        <div id="live-matches">
+            <!-- Live matches will be dynamically moved here -->
+        </div>
+
         <h2>Upcoming Matches</h2>
-        {% if matches %}
-            {% regroup matches by league as league_groups %}
-            {% for league_group in league_groups %}
-                <h3>{{ league_group.grouper }}</h3>
-                <ul style="list-style: none; padding: 0;">
-                    {% for match in league_group.list %}
-                        <li style="margin-bottom: 10px;">
-                            {{ match.title }} - {{ match.date }}
-                            {% if match.is_live %}
-                                (Live Now
-                                {% if match.live_stream_url %}
-                                    - <a href="{% url 'match_detail' match.id %}" target="_blank" style="color: #007bff; text-decoration: none;">Watch Live</a>
+        <div id="upcoming-matches">
+            {% if matches %}
+                {% regroup matches by league as league_groups %}
+                {% for league_group in league_groups %}
+                    <h3>{{ league_group.grouper }}</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        {% for match in league_group.list %}
+                            <li id="match-{{ match.id }}" style="margin-bottom: 10px;">
+                                {{ match.title }} - {{ match.date }}
+                                {% if match.is_live %}
+                                    (Live Now
+                                    {% if match.live_stream_url %}
+                                        - <a href="{% url 'match_detail' match.id %}" target="_blank" style="color: #007bff; text-decoration: none;">Watch Live</a>
+                                    {% endif %}
+                                    )
+                                {% else %}
+                                    - Starts in <span id="countdown-{{ match.id }}" data-start-time="{{ match.date|date:'Y-m-d H:i:s' }}"></span>
                                 {% endif %}
-                                )
-                            {% else %}
-                                - Starts in <span id="countdown-{{ match.id }}" data-start-time="{{ match.date|date:'Y-m-d H:i:s' }}"></span>
-                            {% endif %}
-                            <a href="{% url 'donate' %}" class="btn btn-primary" style="margin-left: 10px; background-color: #28a745; border: none;">Donate</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% endfor %}
-        {% else %}
-            <p>No matches currently available.</p>
-        {% endif %}
+                                <a href="{% url 'donate' %}" class="btn btn-primary" style="margin-left: 10px; background-color: #28a745; border: none;">Donate</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
+            {% else %}
+                <p>No matches currently available.</p>
+            {% endif %}
+        </div>
     </div>
 
     <!-- Sidebar: Blog Posts -->
@@ -102,11 +109,22 @@
 
         if (distance < 0) {
             element.innerHTML = 'Live Now';
+            moveToLiveMatches(element);
         } else {
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
             element.innerHTML = `${hours}h ${minutes}m ${seconds}s`;
+        }
+    }
+
+    function moveToLiveMatches(element) {
+        const matchItem = element.closest('li');
+        if (matchItem) {
+            const liveMatchesContainer = document.getElementById('live-matches');
+            if (liveMatchesContainer) {
+                liveMatchesContainer.appendChild(matchItem);
+            }
         }
     }
 
@@ -121,6 +139,7 @@
     document.addEventListener('DOMContentLoaded', initializeCountdowns);
 </script>
 {% endblock %}
+
 
 
 
