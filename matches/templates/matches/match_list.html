@@ -29,6 +29,7 @@
                 </div>
                 <h3>{{ featured_match.title }}</h3>
                 <p>League: {{ featured_match.league }}</p>
+                {{ featured_match.date }}
                 <p id="featured-match-timer">
                     {% if featured_match.is_live %}
                         Live Now
