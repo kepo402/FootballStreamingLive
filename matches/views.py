@@ -6,6 +6,7 @@ from django.utils.timezone import localtime
 from datetime import timedelta
 from django.shortcuts import render, get_object_or_404
 from .models import Match, BlogPost
+from django.views.decorators.http import require_http_methods
 
 
 def match_list(request):
@@ -43,4 +44,18 @@ def blog_post_detail(request, pk):
 from django.utils import timezone
 from django.utils.timezone import localtime
 from datetime import timedelta
+
+
+@require_http_methods(["GET", "POST"])
+def donate(request):
+    if request.method == "POST":
+        amount = request.POST.get('amount')
+        email = request.POST.get('email')
+        
+        # You could save this information to a database or process it as needed
+        
+        return render(request, 'matches/donate.html', {'amount': amount, 'email': email})
+    
+    # Handle GET request
+    return render(request, 'matches/donate.html')
 

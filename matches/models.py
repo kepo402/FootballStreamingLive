@@ -7,7 +7,11 @@ class Match(models.Model):
     date = models.DateTimeField()
     live_stream_url = models.URLField(blank=True, null=True)
     is_featured = models.BooleanField(default=False)
-    league = models.CharField(max_length=100, blank=True, null=True)  # Add this field
+    league = models.CharField(max_length=100, blank=True, null=True)
+    team1_name = models.CharField(max_length=100)
+    team1_image_url = models.URLField(blank=True, null=True)
+    team2_name = models.CharField(max_length=100)
+    team2_image_url = models.URLField(blank=True, null=True)
 
     def is_live(self):
         now = timezone.now()
@@ -18,7 +22,7 @@ class Match(models.Model):
 
     def __str__(self):
         return self.title
-    
+
 class BlogPost(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
@@ -27,7 +31,5 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
-
-
 
 

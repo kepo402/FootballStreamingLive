@@ -3,6 +3,13 @@
 {% block title %}Football Matches{% endblock %}
 
 {% block content %}
+<!-- Donation Section -->
+<div style="margin-top: 40px; padding: 20px; background-color: #f8f9fa; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); text-align: center;">
+    <h2>Please Donate</h2>
+    <p>Your donations help us keep this website running without the need for intrusive ads. Any amount you can afford to donate is greatly appreciated.</p>
+    <a href="{% url 'donate' %}" class="btn btn-primary" style="background-color: #28a745; border: none;">Donate Now</a>
+</div>
+
 <nav class="mb-4" style="padding: 10px; background-color: #f8f9fa;">
     <ul class="nav">
         <li class="nav-item"><a class="nav-link" href="{% url 'match_list' %}">All Matches</a></li>
@@ -15,7 +22,11 @@
         <h2>Featured Match</h2>
         {% if featured_match %}
             <div style="margin-bottom: 20px;">
-                <img src="{{ featured_match.live_stream_url }}" alt="Featured Match Image" style="width: 100%; height: auto; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <img src="{{ featured_match.team1_image_url }}" alt="{{ featured_match.team1_name }}" style="width: 45%; height: auto; border-radius: 8px;">
+                    <span style="font-size: 24px; font-weight: bold;">VS</span>
+                    <img src="{{ featured_match.team2_image_url }}" alt="{{ featured_match.team2_name }}" style="width: 45%; height: auto; border-radius: 8px;">
+                </div>
                 <h3>{{ featured_match.title }}</h3>
                 <p>League: {{ featured_match.league }}</p>
                 <p>
@@ -28,6 +39,7 @@
                         Starts in {{ featured_match.date|timesince }} hours
                     {% endif %}
                 </p>
+                <a href="{% url 'donate' %}" class="btn btn-primary" style="margin-top: 10px; background-color: #28a745; border: none;">Donate</a>
             </div>
         {% else %}
             <p>No featured match available.</p>
@@ -49,6 +61,7 @@
                                 {% endif %}
                                 )
                             {% endif %}
+                            <a href="{% url 'donate' %}" class="btn btn-primary" style="margin-left: 10px; background-color: #28a745; border: none;">Donate</a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -78,6 +91,7 @@
     </div>
 </div>
 {% endblock %}
+
 
 
 
