@@ -29,14 +29,14 @@
                 </div>
                 <h3>{{ featured_match.title }}</h3>
                 <p>League: {{ featured_match.league }}</p>
-                <p>
+                <p id="featured-match-timer">
                     {% if featured_match.is_live %}
                         Live Now
                         {% if featured_match.live_stream_url %}
                             - <a href="{% url 'match_detail' featured_match.id %}" target="_blank" style="color: #007bff; text-decoration: none;">Watch Live</a>
                         {% endif %}
                     {% else %}
-                        Starts in {{ featured_match.date|timesince }} hours
+                        Starts in <span id="countdown-{{ featured_match.id }}" data-start-time="{{ featured_match.date|date:'Y-m-d H:i:s' }}"></span>
                     {% endif %}
                 </p>
                 <a href="{% url 'donate' %}" class="btn btn-primary" style="margin-top: 10px; background-color: #28a745; border: none;">Donate</a>
@@ -60,6 +60,8 @@
                                     - <a href="{% url 'match_detail' match.id %}" target="_blank" style="color: #007bff; text-decoration: none;">Watch Live</a>
                                 {% endif %}
                                 )
+                            {% else %}
+                                - Starts in <span id="countdown-{{ match.id }}" data-start-time="{{ match.date|date:'Y-m-d H:i:s' }}"></span>
                             {% endif %}
                             <a href="{% url 'donate' %}" class="btn btn-primary" style="margin-left: 10px; background-color: #28a745; border: none;">Donate</a>
                         </li>
@@ -90,7 +92,36 @@
         {% endif %}
     </div>
 </div>
+
+<script>
+    function updateCountdown(element, startTime) {
+        const now = new Date().getTime();
+        const matchTime = new Date(startTime).getTime();
+        const distance = matchTime - now;
+
+        if (distance < 0) {
+            element.innerHTML = 'Live Now';
+        } else {
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            element.innerHTML = `${hours}h ${minutes}m ${seconds}s`;
+        }
+    }
+
+    function initializeCountdowns() {
+        const countdowns = document.querySelectorAll('[id^="countdown-"]');
+        countdowns.forEach(countdown => {
+            const startTime = countdown.getAttribute('data-start-time');
+            setInterval(() => updateCountdown(countdown, startTime), 1000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', initializeCountdowns);
+</script>
 {% endblock %}
+
+
 
 
 
