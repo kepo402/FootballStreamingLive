@@ -46,38 +46,60 @@
             <p>No featured match available.</p>
         {% endif %}
 
-        <h2>Live Matches</h2>
-        <div id="live-matches">
-            <!-- Live matches will be dynamically moved here -->
+        <!-- Live Matches Section -->
+        <div style="margin-top: 40px;">
+            <h2 style="margin-bottom: 20px; color: #333;">Live Matches</h2>
+            <div id="live-matches" style="display: flex; flex-direction: column; gap: 15px;">
+                {% if live_matches %}
+                    {% for match in live_matches %}
+                        <div id="live-match-{{ match.id }}" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 15px;">
+                            <h4 style="margin: 0; font-size: 18px;">{{ match.title }}</h4>
+                            <p style="margin: 5px 0; color: #555;">{{ match.date }}</p>
+                            <p style="margin: 5px 0; color: #007bff;">Live Now
+                                {% if match.live_stream_url %}
+                                    - <a href="{% url 'match_detail' match.id %}" target="_blank" style="color: #007bff; text-decoration: none;">Watch Live</a>
+                                {% endif %}
+                            </p>
+                            <a href="{% url 'donate' %}" class="btn btn-primary" style="background-color: #28a745; border: none;">Donate</a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No live matches currently available.</p>
+                {% endif %}
+            </div>
         </div>
 
-        <h2>Upcoming Matches</h2>
-        <div id="upcoming-matches">
-            {% if matches %}
-                {% regroup matches by league as league_groups %}
-                {% for league_group in league_groups %}
-                    <h3>{{ league_group.grouper }}</h3>
-                    <ul style="list-style: none; padding: 0;">
-                        {% for match in league_group.list %}
-                            <li id="match-{{ match.id }}" style="margin-bottom: 10px;">
-                                {{ match.title }} - {{ match.date }}
-                                {% if match.is_live %}
-                                    (Live Now
-                                    {% if match.live_stream_url %}
-                                        - <a href="{% url 'match_detail' match.id %}" target="_blank" style="color: #007bff; text-decoration: none;">Watch Live</a>
+        <!-- Upcoming Matches Section -->
+        <div style="margin-top: 40px;">
+            <h2 style="margin-bottom: 20px; color: #333;">Upcoming Matches</h2>
+            <div id="upcoming-matches">
+                {% if matches %}
+                    {% regroup matches by league as league_groups %}
+                    {% for league_group in league_groups %}
+                        <h3 style="margin-bottom: 15px; color: #555;">{{ league_group.grouper }}</h3>
+                        <div style="display: flex; flex-direction: column; gap: 15px;">
+                            {% for match in league_group.list %}
+                                <div id="match-{{ match.id }}" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 15px;">
+                                    <h4 style="margin: 0; font-size: 18px;">{{ match.title }}</h4>
+                                    <p style="margin: 5px 0; color: #555;">{{ match.date }}</p>
+                                    {% if match.is_live %}
+                                        <p style="margin: 5px 0; color: #007bff;">Live Now
+                                            {% if match.live_stream_url %}
+                                                - <a href="{% url 'match_detail' match.id %}" target="_blank" style="color: #007bff; text-decoration: none;">Watch Live</a>
+                                            {% endif %}
+                                        </p>
+                                    {% else %}
+                                        <p style="margin: 5px 0;">Starts in <span id="countdown-{{ match.id }}" data-start-time="{{ match.date|date:'Y-m-d H:i:s' }}"></span></p>
                                     {% endif %}
-                                    )
-                                {% else %}
-                                    - Starts in <span id="countdown-{{ match.id }}" data-start-time="{{ match.date|date:'Y-m-d H:i:s' }}"></span>
-                                {% endif %}
-                                <a href="{% url 'donate' %}" class="btn btn-primary" style="margin-left: 10px; background-color: #28a745; border: none;">Donate</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% endfor %}
-            {% else %}
-                <p>No matches currently available.</p>
-            {% endif %}
+                                    <a href="{% url 'donate' %}" class="btn btn-primary" style="background-color: #28a745; border: none;">Donate</a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No matches currently available.</p>
+                {% endif %}
+            </div>
         </div>
     </div>
 
@@ -119,7 +141,7 @@
     }
 
     function moveToLiveMatches(element) {
-        const matchItem = element.closest('li');
+        const matchItem = element.closest('div');
         if (matchItem) {
             const liveMatchesContainer = document.getElementById('live-matches');
             if (liveMatchesContainer) {
@@ -139,6 +161,8 @@
     document.addEventListener('DOMContentLoaded', initializeCountdowns);
 </script>
 {% endblock %}
+
+
 
 
 
