@@ -7,8 +7,27 @@
     <title>{% block title %}Football Streaming{% endblock %}</title>
     <!-- External CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        /* Ensure space between social media icons */
+        .social-icons {
+            margin-top: 10px; /* Space above the icons */
+        }
+        
+        .social-icons a {
+            font-size: 24px; /* Adjust size as needed */
+            color: #ffffff; /* Adjust color */
+            margin: 0 15px; /* Space between icons, adjust as needed */
+            text-decoration: none; /* Remove underline */
+            display: inline-block; /* Ensure margins are respected */
+        }
+        
+        .social-icons a:hover {
+            color: #f0f0f0; /* Color on hover, adjust as needed */
+        }
+    </style>
 </head>
 <body>
     <header class="bg-dark text-white py-4">
@@ -33,6 +52,17 @@
     <footer class="bg-dark text-white py-3">
         <div class="container text-center">
             <p>&copy; 2024 Football Streaming. All rights reserved.</p>
+            <div class="social-icons">
+                <a href="https://facebook.com" class="text-white" aria-label="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://twitter.com" class="text-white" aria-label="Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://instagram.com" class="text-white" aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
         </div>
     </footer>
 
