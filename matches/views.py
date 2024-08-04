@@ -7,6 +7,7 @@ from datetime import timedelta
 from django.shortcuts import render, get_object_or_404
 from .models import Match, BlogPost
 from django.views.decorators.http import require_http_methods
+from django.core.paginator import Paginator
 
 
 def match_list(request):
@@ -58,4 +59,14 @@ def donate(request):
     
     # Handle GET request
     return render(request, 'matches/donate.html')
+
+
+def blog_list(request):
+    blog_posts = BlogPost.objects.all()
+    paginator = Paginator(blog_posts, 10)  # Show 10 blog posts per page.
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'matches/blog_list.html', {'page_obj': page_obj})
 

@@ -8,5 +8,6 @@ urlpatterns = [
     path('live/', views.live_matches, name='live_matches'),
     path('blog/<int:pk>/', views.blog_post_detail, name='blog_post_detail'),
     path('donate/', views.donate, name='donate'),  # URL pattern for donate
+    path('blog/', views.blog_list, name='blog_list'),
 ]
 
