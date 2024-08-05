@@ -75,4 +75,3 @@ def blog_list(request):
     page_obj = paginator.get_page(page_number)
 
     return render(request, 'matches/blog_list.html', {'page_obj': page_obj})
-

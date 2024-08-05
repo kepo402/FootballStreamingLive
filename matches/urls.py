@@ -10,4 +10,3 @@ urlpatterns = [
     path('donate/', views.donate, name='donate'),  # URL pattern for donate
     path('blog/', views.blog_list, name='blog_list'),
 ]
-
