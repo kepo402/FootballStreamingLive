@@ -23,11 +23,11 @@ class Match(models.Model):
         now = timezone.now()
         start_time = self.date
         soon_time = start_time - timezone.timedelta(minutes=30)
-        end_time = start_time + timezone.timedelta(hours=2, minutes=15)
+        end_time = start_time + timezone.timedelta(hours=4)  # Updated to 4 hours
         return soon_time <= now <= end_time
 
     def save(self, *args, **kwargs):
-        if self.date < timezone.now() - timezone.timedelta(hours=2, minutes=15):
+        if self.date < timezone.now() - timezone.timedelta(hours=4):  # Updated to 4 hours
             # Remove the match if it’s past the end time
             self.delete()
         else:
@@ -36,7 +36,7 @@ class Match(models.Model):
 
     def __str__(self):
         return self.title
-
+    
 class BlogPost(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
