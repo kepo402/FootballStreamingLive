@@ -8,6 +8,7 @@ from django.shortcuts import render, get_object_or_404
 from .models import Match, BlogPost
 from django.views.decorators.http import require_http_methods
 from django.core.paginator import Paginator
+from django.http import JsonResponse
 
 
 def match_list(request):
@@ -78,3 +79,15 @@ def blog_list(request):
     page_obj = paginator.get_page(page_number)
 
     return render(request, 'matches/blog_list.html', {'page_obj': page_obj})
+
+def get_livestream_url(request, match_id):
+    try:
+        match = Match.objects.get(id=match_id)
+        livestream_url = match.live_stream_url
+        # Handle cases where the URL might not be set
+        if not livestream_url:
+            livestream_url = 'https://fallback-url.com/default-stream'
+    except Match.DoesNotExist:
+        livestream_url = 'https://fallback-url.com/default-stream'
+
+    return JsonResponse({'livestream_url': livestream_url})

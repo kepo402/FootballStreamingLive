@@ -44,13 +44,29 @@
 </head>
 <body>
     <div class="iframe-container">
-        <iframe 
-            src="{{ match.live_stream_url }}" 
-            frameborder="0" 
-            allowfullscreen>
+        <iframe id="livestream" frameborder="0" allowfullscreen>
             Your browser does not support iframes.
         </iframe>
-        
     </div>
+    <script>
+        async function loadLivestream(matchId) {
+            try {
+                const response = await fetch(`/livestream/${matchId}/`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const livestreamUrl = data.livestream_url;
+                    document.getElementById('livestream').src = livestreamUrl;
+                } else {
+                    console.error('Failed to fetch livestream URL');
+                }
+            } catch (error) {
+                console.error('Error fetching livestream URL:', error);
+            }
+        }
+
+        // Assuming match ID is passed to the template context
+        const matchId = {{ match.id }};
+        loadLivestream(matchId);
+    </script>
 </body>
 </html>
