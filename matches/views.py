@@ -11,17 +11,20 @@ from django.core.paginator import Paginator
 
 
 def match_list(request):
+    now = timezone.now()
     matches = Match.objects.all().order_by('date')
     featured_match = matches.filter(is_featured=True).first()
+
     live_matches = [match for match in matches if match.is_live()]
-    upcoming_matches = [match for match in matches if not match.is_live()]
+    upcoming_matches = [match for match in matches if not match.is_live() and match.date > now]
+    
     blog_posts = BlogPost.objects.all().order_by('-created_at')[:5]  # Display latest 5 blog posts
     
     context = {
-        'matches': upcoming_matches,  # Pass only upcoming matches
         'featured_match': featured_match,
-        'live_matches': live_matches,  # Add live matches to context
-        'blog_posts': blog_posts
+        'live_matches': live_matches,
+        'matches': upcoming_matches,
+        'blog_posts': blog_posts,
     }
     return render(request, 'matches/match_list.html', context)
 
