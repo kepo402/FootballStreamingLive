@@ -130,8 +130,8 @@
         const distance = matchTime - now;
 
         if (distance < 0) {
-            element.innerHTML = 'Live Now';
-            moveToLiveMatches(element);
+            element.innerHTML = 'Completed'; // Change to 'Completed' or appropriate status
+            removeMatch(element);
         } else {
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -140,13 +140,10 @@
         }
     }
 
-    function moveToLiveMatches(element) {
+    function removeMatch(element) {
         const matchItem = element.closest('div');
         if (matchItem) {
-            const liveMatchesContainer = document.getElementById('live-matches');
-            if (liveMatchesContainer) {
-                liveMatchesContainer.appendChild(matchItem);
-            }
+            matchItem.remove(); // Remove the match item from the DOM
         }
     }
 
@@ -154,10 +151,14 @@
         const countdowns = document.querySelectorAll('[id^="countdown-"]');
         countdowns.forEach(countdown => {
             const startTime = countdown.getAttribute('data-start-time');
+            // Initialize countdown display
+            updateCountdown(countdown, startTime);
+            // Update every second
             setInterval(() => updateCountdown(countdown, startTime), 1000);
         });
     }
 
     document.addEventListener('DOMContentLoaded', initializeCountdowns);
 </script>
+
 {% endblock %}
