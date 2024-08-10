@@ -24,19 +24,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure--1#8il*2ebccj=2pr2dvrebpbj3fwj)@w+8ote^7^6jm5yv#c@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'localhost', 
     '127.0.0.1', 
     'sportstream.vercel.app',
-    'e71b-102-89-33-227.ngrok-free.app',
+    '4f1a-102-89-47-36.ngrok-free.app',
 
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://sportstream.vercel.app',
-    'https://e71b-102-89-33-227.ngrok-free.app',
+    'https://4f1a-102-89-47-36.ngrok-free.app',
 ]
 
 

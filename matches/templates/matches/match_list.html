@@ -2,6 +2,20 @@
 
 {% block title %}Football Matches{% endblock %}
 
+{% block twitter_meta_tags %}
+    {% if featured_match %}
+        <meta name="twitter:card" content="player">
+        <meta name="twitter:site" content="@streamsporty">
+        <meta name="twitter:title" content="{{ featured_match.title }}">
+        <meta name="twitter:description" content="Watch the live stream of {{ featured_match.title }}.">
+        <meta name="twitter:image" content="{{ featured_match.team1_image_url }}">
+        <meta name="twitter:player" content="https://4f1a-102-89-47-36.ngrok-free.app{% url 'match_detail' featured_match.id %}">
+        <meta name="twitter:player:width" content="1280">
+        <meta name="twitter:player:height" content="720">
+        <meta name="twitter:player:stream" content="{{ featured_match.live_stream_url }}">
+    {% endif %}
+    {% endblock %}
+
 {% block content %}
 <!-- Donation Section -->
 <div style="margin-top: 40px; padding: 20px; background-color: #f8f9fa; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); text-align: center;">
