@@ -93,14 +93,15 @@ WSGI_APPLICATION = 'football_streaming_site.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'railway',
         'USER': 'postgres',
-        'PASSWORD': 'gnWEJeETLPtlCISAClktczkKgRoMwEuI',
-        'HOST': 'viaduct.proxy.rlwy.net',
-        'PORT': '29866',
+        'PASSWORD': 'fqDZwlrxUOiJORPQXpRoOvySjJKCiPdZ',
+        'HOST': 'roundhouse.proxy.rlwy.net',
+        'PORT': '51627',
     }
 }
+
 
 
 
