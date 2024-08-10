@@ -128,6 +128,17 @@
     </div>
 </div>
 
+<!-- Advertisement Section -->
+<div class="advertisement-section mt-5 p-4" style="background: linear-gradient(135deg, #f5f7fa, #c3cfe2); border-radius: 10px; text-align: center;">
+    <h4 style="color: #333; margin-bottom: 20px;">Advertise With Us</h4>
+    <p style="margin-bottom: 20px; color: #555;">Reach thousands of sports fans by advertising on our website. Showcase your brand to an engaged audience.</p>
+    <a href="{% url 'advertise' %}" style="text-decoration: none; color: #007bff;">
+        <div style="display: inline-block; background-color: #007bff; padding: 10px 20px; border-radius: 5px; color: #fff; font-weight: bold; cursor: pointer;">
+            Contact Us to Learn More
+        </div>
+    </a>
+</div>
+
 <script>
     function updateCountdown(element, startTime) {
         const now = new Date().getTime();
@@ -152,15 +163,12 @@
             const liveSection = document.getElementById('live-matches');
             const liveLeague = liveSection.querySelector(`#live-league-${leagueContainer.id.split('-').pop()}`);
 
-            // If this league is already in the live section, just move the match item
             if (liveLeague) {
                 liveLeague.querySelector('.matches').appendChild(matchItem);
             } else {
-                // Otherwise, move the entire league container
                 liveSection.appendChild(leagueContainer);
             }
 
-            // Remove empty league containers from the upcoming section
             const upcomingLeagues = document.querySelectorAll('#upcoming-matches .league-container');
             upcomingLeagues.forEach(container => {
                 const matches = container.querySelectorAll('div[id^="match-"]');
@@ -175,9 +183,7 @@
         const countdowns = document.querySelectorAll('[id^="countdown-"]');
         countdowns.forEach(countdown => {
             const startTime = countdown.getAttribute('data-start-time');
-            // Initialize countdown display
             updateCountdown(countdown, startTime);
-            // Update every second
             setInterval(() => updateCountdown(countdown, startTime), 1000);
         });
     }
@@ -186,6 +192,7 @@
 </script>
 
 {% endblock %}
+
 
 
 

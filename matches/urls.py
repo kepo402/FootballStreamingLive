@@ -10,4 +10,5 @@ urlpatterns = [
     path('donate/', views.donate, name='donate'),  # URL pattern for donate
     path('blog/', views.blog_list, name='blog_list'),
     path('livestream/<int:match_id>/', views.get_livestream_url, name='livestream_url'),
+    path('advertise/', views.advertise_with_us, name='advertise'),
 ]

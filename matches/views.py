@@ -91,3 +91,7 @@ def get_livestream_url(request, match_id):
         livestream_url = 'https://fallback-url.com/default-stream'
 
     return JsonResponse({'livestream_url': livestream_url})
+
+
+def advertise_with_us(request):
+    return render(request, 'matches/advertise.html')
