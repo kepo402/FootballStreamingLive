@@ -133,7 +133,7 @@
                 {% for blog_post in blog_posts %}
                     <div style="margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
                         <a href="{% url 'blog_post_detail' blog_post.id %}" style="text-decoration: none; color: inherit;">
-                            <img src="{{ blog_post.image.url }}" alt="{{ blog_post.title }}" style="width: 100%; height: auto; border-radius: 8px; margin-bottom: 10px;">
+                            <img src="{{ blog_post.image_url }}" alt="{{ blog_post.title }}" style="width: 100%; height: auto; border-radius: 8px; margin-bottom: 10px;">
                             <h3 style="font-size: 18px; margin: 0;">{{ blog_post.title }}</h3>
                             <p style="color: #888; font-size: 14px;">{{ blog_post.publish_date|date:"F j, Y" }}</p>
                         </a>
