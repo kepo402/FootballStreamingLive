@@ -14,7 +14,7 @@
         <meta name="twitter:player:height" content="720">
         <meta name="twitter:player:stream" content="{{ featured_match.live_stream_url }}">
     {% endif %}
-    {% endblock %}
+{% endblock %}
 
 {% block content %}
 <!-- Donation Section -->
@@ -50,6 +50,7 @@
                         Live Now
                         {% if featured_match.live_stream_url %}
                             - <a href="{% url 'match_detail' featured_match.id %}" target="_blank" style="color: #007bff; text-decoration: none;">Watch Live</a>
+                            <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream.</span>
                         {% endif %}
                     {% else %}
                         Starts in <span id="countdown-{{ featured_match.id }}" data-start-time="{{ featured_match.date|date:'Y-m-d H:i:s' }}"></span>
@@ -78,6 +79,7 @@
                                         <p style="margin: 5px 0; color: #007bff;">Live Now
                                             {% if match.live_stream_url %}
                                                 - <a href="{% url 'match_detail' match.id %}" target="_blank" style="color: #007bff; text-decoration: none;">Watch Live</a>
+                                                <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream.</span>
                                             {% endif %}
                                         </p>
                                         <a href="{% url 'donate' %}" class="btn btn-primary" style="background-color: #28a745; border: none;">Donate</a>
@@ -108,6 +110,7 @@
                                             <h4 style="margin: 0; font-size: 18px;">{{ match.title }}</h4>
                                             <p style="margin: 5px 0; color: #555;">{{ match.date }}</p>
                                             <p style="margin: 5px 0;">Starts in <span id="countdown-{{ match.id }}" data-start-time="{{ match.date|date:'Y-m-d H:i:s' }}"></span></p>
+                                            <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream.</span>
                                             <a href="{% url 'donate' %}" class="btn btn-primary" style="background-color: #28a745; border: none;">Donate</a>
                                         </div>
                                     {% endif %}
@@ -129,10 +132,11 @@
             <div>
                 {% for blog_post in blog_posts %}
                     <div style="margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
-                        <img src="{{ blog_post.image_url }}" alt="Blog Post Image" style="width: 100%; height: auto; border-radius: 8px;">
-                        <h3 style="margin-top: 10px;">{{ blog_post.title }}</h3>
-                        <p>{{ blog_post.content|truncatewords:30 }}</p>
-                        <a href="{% url 'blog_post_detail' blog_post.pk %}" style="color: #007bff; text-decoration: none;">Read more</a>
+                        <a href="{% url 'blog_post_detail' blog_post.id %}" style="text-decoration: none; color: inherit;">
+                            <img src="{{ blog_post.image.url }}" alt="{{ blog_post.title }}" style="width: 100%; height: auto; border-radius: 8px; margin-bottom: 10px;">
+                            <h3 style="font-size: 18px; margin: 0;">{{ blog_post.title }}</h3>
+                            <p style="color: #888; font-size: 14px;">{{ blog_post.publish_date|date:"F j, Y" }}</p>
+                        </a>
                     </div>
                 {% endfor %}
             </div>
@@ -142,73 +146,28 @@
     </div>
 </div>
 
-<!-- Advertisement Section -->
-<div class="advertisement-section mt-5 p-4" style="background: linear-gradient(135deg, #f5f7fa, #c3cfe2); border-radius: 10px; text-align: center;">
-    <h4 style="color: #333; margin-bottom: 20px;">Advertise With Us</h4>
-    <p style="margin-bottom: 20px; color: #555;">Reach thousands of sports fans by advertising on our website. Showcase your brand to an engaged audience.</p>
-    <a href="{% url 'advertise' %}" style="text-decoration: none; color: #007bff;">
-        <div style="display: inline-block; background-color: #007bff; padding: 10px 20px; border-radius: 5px; color: #fff; font-weight: bold; cursor: pointer;">
-            Contact Us to Learn More
-        </div>
-    </a>
-</div>
-
 <script>
-    function updateCountdown(element, startTime) {
-        const now = new Date().getTime();
-        const matchTime = new Date(startTime).getTime();
-        const distance = matchTime - now;
+    // JavaScript for countdown timers
+    function updateCountdown() {
+        const countdownElements = document.querySelectorAll('[id^="countdown-"]');
+        countdownElements.forEach(function(el) {
+            const startTime = new Date(el.getAttribute('data-start-time')).getTime();
+            const now = new Date().getTime();
+            const timeLeft = startTime - now;
 
-        if (distance < 0) {
-            element.innerHTML = 'Live Now';
-            moveToLive(element);
-        } else {
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            element.innerHTML = `${hours}h ${minutes}m ${seconds}s`;
-        }
-    }
-
-    function moveToLive(element) {
-        const matchItem = element.closest('div[id^="match-"]');
-        if (matchItem) {
-            const leagueContainer = matchItem.closest('.league-container');
-            const liveSection = document.getElementById('live-matches');
-            const liveLeague = liveSection.querySelector(`#live-league-${leagueContainer.id.split('-').pop()}`);
-
-            if (liveLeague) {
-                liveLeague.querySelector('.matches').appendChild(matchItem);
+            if (timeLeft > 0) {
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                el.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
             } else {
-                liveSection.appendChild(leagueContainer);
+                el.textContent = 'Starting soon...';
             }
-
-            const upcomingLeagues = document.querySelectorAll('#upcoming-matches .league-container');
-            upcomingLeagues.forEach(container => {
-                const matches = container.querySelectorAll('div[id^="match-"]');
-                if (matches.length === 0) {
-                    container.remove();
-                }
-            });
-        }
-    }
-
-    function initializeCountdowns() {
-        const countdowns = document.querySelectorAll('[id^="countdown-"]');
-        countdowns.forEach(countdown => {
-            const startTime = countdown.getAttribute('data-start-time');
-            updateCountdown(countdown, startTime);
-            setInterval(() => updateCountdown(countdown, startTime), 1000);
         });
     }
 
-    document.addEventListener('DOMContentLoaded', initializeCountdowns);
+    setInterval(updateCountdown, 1000);
 </script>
 
 {% endblock %}
-
-
-
-
-
-
