@@ -129,17 +129,16 @@
     <div style="flex: 1; min-width: 30%; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
         <h2>Sport News Blog</h2>
         {% if blog_posts %}
-            <div>
-                {% for blog_post in blog_posts %}
-                    <div style="margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
-                        <a href="{% url 'blog_post_detail' blog_post.id %}" style="text-decoration: none; color: inherit;">
-                            <img src="{{ blog_post.image_url }}" alt="{{ blog_post.title }}" style="width: 100%; height: auto; border-radius: 8px; margin-bottom: 10px;">
-                            <h3 style="font-size: 18px; margin: 0;">{{ blog_post.title }}</h3>
-                            <p style="color: #888; font-size: 14px;">{{ blog_post.publish_date|date:"F j, Y" }}</p>
-                        </a>
-                    </div>
-                {% endfor %}
-            </div>
+        <div>
+            {% for blog_post in blog_posts %}
+                <div style="margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                    <img src="{{ blog_post.image_url }}" alt="Blog Post Image" style="width: 100%; height: auto; border-radius: 8px;">
+                    <h3 style="margin-top: 10px;">{{ blog_post.title }}</h3>
+                    <p>{{ blog_post.content|truncatewords:30 }}</p>
+                    <a href="{% url 'blog_post_detail' blog_post.pk %}" style="color: #007bff; text-decoration: none;">Read more</a>
+                </div>
+            {% endfor %}
+        </div>
         {% else %}
             <p>No blog posts available.</p>
         {% endif %}
