@@ -148,25 +148,31 @@
 <script>
     // JavaScript for countdown timers
     function updateCountdown() {
-        const countdownElements = document.querySelectorAll('[id^="countdown-"]');
-        countdownElements.forEach(function(el) {
-            const startTime = new Date(el.getAttribute('data-start-time')).getTime();
-            const now = new Date().getTime();
-            const timeLeft = startTime - now;
+    const countdownElements = document.querySelectorAll('[id^="countdown-"]');
+    countdownElements.forEach(function(el) {
+        // Get the date-time string from the element's attribute
+        const startTimeString = el.getAttribute('data-start-time');
 
-            if (timeLeft > 0) {
-                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-                el.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-            } else {
-                el.textContent = 'Starting soon...';
-            }
-        });
-    }
+        // Parse the date-time string in a standardized way
+        const startTime = new Date(startTimeString.replace(' ', 'T')).getTime(); // Replace space with 'T' for ISO format compatibility
 
-    setInterval(updateCountdown, 1000);
+        const now = new Date().getTime();
+        const timeLeft = startTime - now;
+
+        if (timeLeft > 0) {
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            el.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        } else {
+            el.textContent = 'Starting soon...';
+        }
+    });
+}
+
+setInterval(updateCountdown, 1000);
+
 </script>
 
 {% endblock %}

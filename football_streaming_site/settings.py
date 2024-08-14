@@ -31,6 +31,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1', 
     'sportstream.vercel.app',
     '4f1a-102-89-47-36.ngrok-free.app',
+    
 
 ]
 
