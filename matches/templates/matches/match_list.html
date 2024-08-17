@@ -50,7 +50,7 @@
                         Live Now
                         {% if featured_match.live_stream_url %}
                             - <a href="{% url 'match_detail' featured_match.id %}" target="_blank" style="color: #007bff; text-decoration: none;">Watch Live</a>
-                            <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream.</span>
+                            <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream. To ensure uninterrupted viewing and protect your browsing experience, we recommend using an adblocker.</span>
                         {% endif %}
                     {% else %}
                         Starts in <span id="countdown-{{ featured_match.id }}" data-start-time="{{ featured_match.date|date:'Y-m-d H:i:s' }}"></span>
@@ -79,7 +79,7 @@
                                         <p style="margin: 5px 0; color: #007bff;">Live Now
                                             {% if match.live_stream_url %}
                                                 - <a href="{% url 'match_detail' match.id %}" target="_blank" style="color: #007bff; text-decoration: none;">Watch Live</a>
-                                                <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream.</span>
+                                                <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream. To ensure uninterrupted viewing and protect your browsing experience, we recommend using an adblocker.</span>
                                             {% endif %}
                                         </p>
                                         <a href="{% url 'donate' %}" class="btn btn-primary" style="background-color: #28a745; border: none;">Donate</a>
@@ -110,7 +110,7 @@
                                             <h4 style="margin: 0; font-size: 18px;">{{ match.title }}</h4>
                                             <p style="margin: 5px 0; color: #555;">{{ match.date }}</p>
                                             <p style="margin: 5px 0;">Starts in <span id="countdown-{{ match.id }}" data-start-time="{{ match.date|date:'Y-m-d H:i:s' }}"></span></p>
-                                            <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream.</span>
+                                            <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream. To ensure uninterrupted viewing and protect your browsing experience, we recommend using an adblocker.</span>
                                             <a href="{% url 'donate' %}" class="btn btn-primary" style="background-color: #28a745; border: none;">Donate</a>
                                         </div>
                                     {% endif %}
