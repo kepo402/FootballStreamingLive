@@ -55,7 +55,14 @@
                 if (response.ok) {
                     const data = await response.json();
                     const livestreamUrl = data.livestream_url;
-                    document.getElementById('livestream').src = livestreamUrl;
+
+                    // iOS-specific redirect logic
+                    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                        window.location.href = livestreamUrl;
+                    } else {
+                        // Set the iframe source for non-iOS devices
+                        document.getElementById('livestream').src = livestreamUrl;
+                    }
                 } else {
                     console.error('Failed to fetch livestream URL');
                 }
