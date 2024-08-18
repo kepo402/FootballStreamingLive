@@ -56,11 +56,11 @@
                     const data = await response.json();
                     const livestreamUrl = data.livestream_url;
 
-                    // iOS-specific redirect logic
-                    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                    // Redirect logic for iOS and Android devices
+                    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
                         window.location.href = livestreamUrl;
                     } else {
-                        // Set the iframe source for non-iOS devices
+                        // Set the iframe source for non-mobile devices
                         document.getElementById('livestream').src = livestreamUrl;
                     }
                 } else {
