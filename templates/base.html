@@ -10,10 +10,11 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
     <!-- Twitter Meta Tags Block -->
     {% block twitter_meta_tags %}
-    <!-- Default meta tags (can be overridden in child templates) -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@streamsporty">
     <meta name="twitter:title" content="Football Streaming">
@@ -23,53 +24,117 @@
 
     <!-- Custom CSS -->
     <style>
-        /* Ensure space between social media icons */
-        .social-icons {
-            margin-top: 10px; /* Space above the icons */
+        /* Apply Google Font */
+        body, h1, h2, h3, h4, p, a {
+            font-family: 'Poppins', sans-serif;
         }
-        .social-icons a {
-            font-size: 24px; /* Adjust size as needed */
-            color: #ffffff; /* Adjust color */
-            margin: 0 15px; /* Space between icons, adjust as needed */
-            text-decoration: none; /* Remove underline */
-            display: inline-block; /* Ensure margins are respected */
+
+        /* Header Styling */
+        header {
+            background: linear-gradient(45deg, #1e3c72, #2a5298);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .social-icons a:hover {
-            color: #f0f0f0; /* Color on hover, adjust as needed */
+        header h1 {
+            font-weight: 600;
+            margin: 0;
+        }
+        header nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+        }
+        header nav ul li {
+            margin-right: 15px;
+        }
+        header nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+        header nav ul li a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main Styling */
+        main {
+            background-color: #f4f7fa;
+            padding: 20px;
+        }
+        
+        /* Footer Styling */
+        footer {
+            background: linear-gradient(45deg, #2a5298, #1e3c72);
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+        }
+        footer p {
+            margin: 0;
+        }
+        footer .social-icons a {
+            color: #ffffff;
+            margin: 0 10px;
+            font-size: 20px;
+            transition: color 0.3s ease;
+        }
+        footer .social-icons a:hover {
+            color: #50b3a2;
+        }
+
+        /* Button Styling */
+        .btn-primary {
+            background-color: #50b3a2;
+            border: none;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .btn-primary:hover {
+            background-color: #43a18c;
+            transform: translateY(-2px);
+        }
+
+        /* Link Styling */
+        a {
+            color: #2a5298;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #1e3c72;
         }
     </style>
 </head>
 <body>
-    <header class="bg-dark text-white py-4">
+    <header class="text-white py-4">
         <div class="container">
             <h1 class="mb-0">Football Streaming</h1>
             <nav>
                 <ul class="nav">
-                    <li class="nav-item"><a class="nav-link text-white" href="{% url 'match_list' %}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="{% url 'blog_list' %}">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'match_list' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'blog_list' %}">Blog</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <main class="py-4">
+    <main>
         <div class="container">
             {% block content %}
             {% endblock %}
         </div>
     </main>
 
-    <footer class="bg-dark text-white py-3">
+    <footer class="text-white py-3">
         <div class="container text-center">
             <p>&copy; 2024 Football Streaming. All rights reserved.</p>
             <div class="social-icons">
-                <a href="https://facebook.com" class="text-white" aria-label="Facebook">
+                <a href="https://facebook.com" aria-label="Facebook">
                     <i class="fab fa-facebook-f"></i>
                 </a>
-                <a href="https://x.com/streamsporty" class="text-white" aria-label="Twitter">
+                <a href="https://x.com/streamsporty" aria-label="Twitter">
                     <i class="fab fa-twitter"></i>
                 </a>
-                <a href="https://instagram.com" class="text-white" aria-label="Instagram">
+                <a href="https://instagram.com" aria-label="Instagram">
                     <i class="fab fa-instagram"></i>
                 </a>
             </div>
