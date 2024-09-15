@@ -12,14 +12,14 @@ from django.http import JsonResponse
 from match_scraper import scrape_matches
 
 
-def match_list(request):
+def match_list(request, game_type='football'):
     # Scrape new matches and save them to the database
     scrape_matches()
 
     now = timezone.now()
 
-    # Fetch matches from the database as before
-    matches = Match.objects.all().order_by('date')
+    # Fetch matches from the database, filter by game_type
+    matches = Match.objects.filter(game_type=game_type).order_by('date')
     featured_match = matches.filter(is_featured=True).first()
     
     live_matches = [match for match in matches if match.is_live()]
@@ -33,7 +33,9 @@ def match_list(request):
         'live_matches': live_matches,
         'matches': upcoming_matches,
         'blog_posts': blog_posts,
+        'current_game_type': game_type,
     }
+
     return render(request, 'matches/match_list.html', context)
 
 

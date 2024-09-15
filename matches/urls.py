@@ -3,11 +3,12 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.match_list, name='match_list'),
+    path('', views.match_list, name='match_list'),  # Home defaults to football
+    path('matches/<str:game_type>/', views.match_list, name='match_list_by_sport'),  # Sport-specific matches
     path('match/<int:match_id>/', views.match_detail, name='match_detail'),
     path('live/', views.live_matches, name='live_matches'),
     path('blog/<int:pk>/', views.blog_post_detail, name='blog_post_detail'),
-    path('donate/', views.donate, name='donate'),  # URL pattern for donate
+    path('donate/', views.donate, name='donate'),
     path('blog/', views.blog_list, name='blog_list'),
     path('livestream/<int:match_id>/', views.get_livestream_url, name='livestream_url'),
     path('advertise/', views.advertise_with_us, name='advertise'),

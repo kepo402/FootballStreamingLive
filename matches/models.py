@@ -8,6 +8,28 @@ class League(models.Model):
         return self.name
 
 class Match(models.Model):
+    NBA = 'nba'
+    NHL = 'nhl'
+    MLB = 'mlb'
+    MMA = 'mma'
+    BOXING = 'boxing'
+    NFL = 'nfl'
+    CFB = 'cfb'
+    MOTOR_SPORTS = 'motor_sports'
+    SOCCER = 'soccer'
+
+    GAME_TYPES = [
+        (NBA, 'NBA Streams'),
+        (NHL, 'NHL Streams'),
+        (MLB, 'MLB Streams'),
+        (MMA, 'MMA Streams'),
+        (BOXING, 'Boxing Streams'),
+        (NFL, 'NFL Streams'),
+        (CFB, 'CFB Streams'),
+        (MOTOR_SPORTS, 'Motor Sports Streams'),
+        (SOCCER, 'Soccer Streams'),
+    ]
+
     title = models.CharField(max_length=200)
     description = models.TextField()
     date = models.DateTimeField()
@@ -18,6 +40,7 @@ class Match(models.Model):
     team1_image_url = models.URLField(blank=True, null=True)
     team2_name = models.CharField(max_length=100)
     team2_image_url = models.URLField(blank=True, null=True)
+    game_type = models.CharField(max_length=50, choices=GAME_TYPES, default=SOCCER)
 
     def is_live(self):
         now = timezone.now()
@@ -28,14 +51,13 @@ class Match(models.Model):
 
     def save(self, *args, **kwargs):
         if self.pk and self.date < timezone.now() - timezone.timedelta(hours=4):
-            # Remove the match if it’s past the end time
             super().delete()
         else:
-            # Otherwise, save it normally
             super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
+
     
 class BlogPost(models.Model):
     title = models.CharField(max_length=200)

@@ -57,6 +57,12 @@
         header nav ul li a:hover {
             background: rgba(255, 255, 255, 0.1);
         }
+        /* Active link style */
+        .nav-link.active {
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
 
         /* Main Styling */
         main {
@@ -110,9 +116,13 @@
             <h1 class="mb-0">Football Streaming</h1>
             <nav>
                 <ul class="nav">
-                    <li class="nav-item"><a class="nav-link" href="{% url 'match_list' %}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'blog_list' %}">Blog</a></li>
-                    <li class="nav-item"><a class="nav-link" href="https://mlb.com/stream">MLB Stream</a></li> <!-- Added MLB Stream Link -->
+                    <li class="nav-item"><a class="nav-link {% if current_game_type == 'soccer' %}active{% endif %}" href="{% url 'match_list_by_sport' 'soccer' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link {% if current_game_type == 'nba' %}active{% endif %}" href="{% url 'match_list_by_sport' 'nba' %}">NBA Streams</a></li>
+                    <li class="nav-item"><a class="nav-link {% if current_game_type == 'mlb' %}active{% endif %}" href="{% url 'match_list_by_sport' 'mlb' %}">MLB Streams</a></li>
+                    <li class="nav-item"><a class="nav-link {% if current_game_type == 'nfl' %}active{% endif %}" href="{% url 'match_list_by_sport' 'nfl' %}">NFL Streams</a></li>
+                    <li class="nav-item"><a class="nav-link {% if current_game_type == 'mma' %}active{% endif %}" href="{% url 'match_list_by_sport' 'mma' %}">MMA Streams</a></li>
+                    <li class="nav-item"><a class="nav-link {% if current_game_type == 'soccer' %}active{% endif %}" href="{% url 'match_list_by_sport' 'soccer' %}">Soccer Streams</a></li>
+                    <li class="nav-item"><a class="nav-link {% if current_game_type == 'nhl' %}active{% endif %}" href="{% url 'match_list_by_sport' 'nhl' %}">NHL Streams</a></li>
                 </ul>
             </nav>
         </div>
