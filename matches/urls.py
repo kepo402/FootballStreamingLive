@@ -3,6 +3,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('', views.home, name='home'),  # Redirects to soccer page
     path('', views.match_list, name='match_list'),  # Home defaults to football
     path('matches/<str:game_type>/', views.match_list, name='match_list_by_sport'),  # Sport-specific matches
     path('match/<int:match_id>/', views.match_detail, name='match_detail'),

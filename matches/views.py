@@ -10,9 +10,10 @@ from django.views.decorators.http import require_http_methods
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from match_scraper import scrape_matches
+from django.shortcuts import redirect
 
 
-def match_list(request, game_type='football'):
+def match_list(request, game_type='soccer'):
     # Scrape new matches and save them to the database
     scrape_matches()
 
@@ -104,3 +105,6 @@ def get_livestream_url(request, match_id):
 
 def advertise_with_us(request):
     return render(request, 'matches/advertise.html')
+
+def home(request):
+    return redirect('match_list_by_sport', game_type='soccer')
