@@ -23,13 +23,13 @@ class Match(models.Model):
         now = timezone.now()
         start_time = self.date
         soon_time = start_time - timezone.timedelta(minutes=30)
-        end_time = start_time + timezone.timedelta(hours=4)  # Updated to 4 hours
+        end_time = start_time + timezone.timedelta(hours=4)
         return soon_time <= now <= end_time
 
     def save(self, *args, **kwargs):
-        if self.date < timezone.now() - timezone.timedelta(hours=4):  # Updated to 4 hours
+        if self.pk and self.date < timezone.now() - timezone.timedelta(hours=4):
             # Remove the match if it’s past the end time
-            self.delete()
+            super().delete()
         else:
             # Otherwise, save it normally
             super().save(*args, **kwargs)

@@ -9,18 +9,25 @@ from .models import Match, BlogPost
 from django.views.decorators.http import require_http_methods
 from django.core.paginator import Paginator
 from django.http import JsonResponse
+from match_scraper import scrape_matches
 
 
 def match_list(request):
+    # Scrape new matches and save them to the database
+    scrape_matches()
+
     now = timezone.now()
+
+    # Fetch matches from the database as before
     matches = Match.objects.all().order_by('date')
     featured_match = matches.filter(is_featured=True).first()
-
+    
     live_matches = [match for match in matches if match.is_live()]
     upcoming_matches = [match for match in matches if not match.is_live() and match.date > now]
     
-    blog_posts = BlogPost.objects.all().order_by('-created_at')[:5]  # Display latest 5 blog posts
-    
+    # Fetch the latest 5 blog posts
+    blog_posts = BlogPost.objects.all().order_by('-created_at')[:5]
+
     context = {
         'featured_match': featured_match,
         'live_matches': live_matches,
