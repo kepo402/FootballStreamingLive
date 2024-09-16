@@ -15,7 +15,7 @@ from django.shortcuts import redirect
 
 def match_list(request, game_type='soccer'):
     # Scrape new matches and save them to the database
-    scrape_matches()
+    # scrape_matches()
 
     now = timezone.now()
 
