@@ -8,6 +8,7 @@ class League(models.Model):
         return self.name
 
 class Match(models.Model):
+    # Existing choices
     NBA = 'nba'
     NHL = 'nhl'
     MLB = 'mlb'
@@ -35,7 +36,7 @@ class Match(models.Model):
     date = models.DateTimeField()
     live_stream_url = models.URLField(blank=True, null=True)
     is_featured = models.BooleanField(default=False)
-    league = models.ForeignKey(League, on_delete=models.CASCADE)
+    league = models.ForeignKey(League, on_delete=models.CASCADE, null=True, blank=True)
     team1_name = models.CharField(max_length=100)
     team1_image_url = models.URLField(blank=True, null=True)
     team2_name = models.CharField(max_length=100)
@@ -57,6 +58,7 @@ class Match(models.Model):
 
     def __str__(self):
         return self.title
+
 
     
 class BlogPost(models.Model):

@@ -1,6 +1,6 @@
 import os
 import django
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 from bs4 import BeautifulSoup
 import requests
@@ -73,14 +73,29 @@ def scrape_matches():
 
             # Convert date and time from USA to Nigeria time
             try:
-                usa_time = datetime.strptime(date_time_str, '%B %d, %Y , %I:%M %p')
+                # Parse the date string to a naive datetime object
+                usa_time_naive = datetime.strptime(date_time_str, '%B %d, %Y , %I:%M %p')
+                
+                # Set the timezone to New York and automatically adjust for DST
                 usa_timezone = pytz.timezone('America/New_York')
                 nigeria_timezone = pytz.timezone('Africa/Lagos')
 
-                usa_time = usa_timezone.localize(usa_time)
-                nigeria_time = usa_time.astimezone(nigeria_timezone)
-            except ValueError:
-                print(f"Error parsing date/time: {date_time_str}")
+                # Localize the naive datetime to New York timezone (which handles DST automatically)
+                usa_time = usa_timezone.localize(usa_time_naive, is_dst=None)
+
+                # Check if DST is active and adjust manually for a 6-hour difference
+                if usa_time.dst() != timedelta(0):
+                    # If DST is active, add an extra hour to the time difference
+                    nigeria_time = usa_time.astimezone(nigeria_timezone) + timedelta(hours=1)
+                else:
+                    # If DST is not active, apply the regular conversion
+                    nigeria_time = usa_time.astimezone(nigeria_timezone)
+                
+                print(f"Original date string: {date_time_str}")
+                print(f"USA time (localized): {usa_time} - Is DST? {usa_time.dst() != timedelta(0)}")
+                print(f"Nigeria time: {nigeria_time}")
+            except ValueError as e:
+                print(f"Error parsing date/time: {date_time_str} - {e}")
                 continue
 
             # Get the livestream URL
@@ -94,7 +109,7 @@ def scrape_matches():
                     defaults={
                         'live_stream_url': live_stream_url,
                         'is_featured': False,
-                        'league': League.objects.first(),  # Replace with your actual league selection logic
+                        # 'league': League.objects.first(),  # Replace with your actual league selection logic
                         'team1_name': 'Team 1',  # Placeholder
                         'team1_image_url': '',  # Placeholder
                         'team2_name': 'Team 2',  # Placeholder
