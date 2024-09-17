@@ -36,7 +36,6 @@ class Match(models.Model):
     date = models.DateTimeField()
     live_stream_url = models.URLField(blank=True, null=True)
     is_featured = models.BooleanField(default=False)
-    league = models.ForeignKey(League, on_delete=models.CASCADE, null=True, blank=True)
     team1_name = models.CharField(max_length=100)
     team1_image_url = models.URLField(blank=True, null=True)
     team2_name = models.CharField(max_length=100)

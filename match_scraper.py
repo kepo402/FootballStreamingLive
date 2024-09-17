@@ -109,7 +109,7 @@ def scrape_matches():
                     defaults={
                         'live_stream_url': live_stream_url,
                         'is_featured': False,
-                        # 'league': League.objects.first(),  # Replace with your actual league selection logic
+                        #'league': League.objects.first(),  # Replace with your actual league selection logic
                         'team1_name': 'Team 1',  # Placeholder
                         'team1_image_url': '',  # Placeholder
                         'team2_name': 'Team 2',  # Placeholder

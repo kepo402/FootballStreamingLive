@@ -2,7 +2,6 @@
 
 {% block title %}Football Matches{% endblock %}
 
-
 {% block content %}
 <!-- Donation Section -->
 <div class="donation-section">
@@ -32,7 +31,6 @@
     </button>
 </div>
 
-
 <nav class="mb-4" style="padding: 10px; background-color: #f8f9fa;">
     <ul class="nav">
         <li class="nav-item"><a class="nav-link" href="{% url 'match_list' %}">All Matches</a></li>
@@ -52,7 +50,6 @@
                     <img src="{{ featured_match.team2_image_url }}" alt="{{ featured_match.team2_name }}" style="width: 45%; height: auto; border-radius: 8px;">
                 </div>
                 <h3>{{ featured_match.title }}</h3>
-                <p>League: {{ featured_match.league }}</p>
                 <p>{{ featured_match.date }}</p>
                 <p id="featured-match-timer">
                     {% if featured_match.is_live %}
@@ -76,25 +73,17 @@
             <h2 style="margin-bottom: 20px; color: #333;">Live Matches</h2>
             <div id="live-matches" style="display: flex; flex-direction: column; gap: 15px;">
                 {% if live_matches %}
-                    {% regroup live_matches by league as league_groups %}
-                    {% for league_group in league_groups %}
-                        <div id="live-league-{{ forloop.counter }}" class="league-container">
-                            <h3 style="margin-bottom: 15px; color: #555;">{{ league_group.grouper }}</h3>
-                            <div class="matches" style="display: flex; flex-direction: column; gap: 15px;">
-                                {% for match in league_group.list %}
-                                    <div id="live-match-{{ match.id }}" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 15px;">
-                                        <h4 style="margin: 0; font-size: 18px;">{{ match.title }}</h4>
-                                        <p style="margin: 5px 0; color: #555;">{{ match.date }}</p>
-                                        <p style="margin: 5px 0; color: #007bff;">Live Now
-                                            {% if match.live_stream_url %}
-                                                - <a href="{% url 'match_detail' match.id %}" target="_blank" style="color: #007bff; text-decoration: none;">Watch Live</a>
-                                                <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream. To ensure uninterrupted viewing and protect your browsing experience, we recommend using an adblocker.</span>
-                                            {% endif %}
-                                        </p>
-                                        <a href="{% url 'donate' %}" class="btn btn-primary" style="background-color: #28a745; border: none;">Donate</a>
-                                    </div>
-                                {% endfor %}
-                            </div>
+                    {% for match in live_matches %}
+                        <div id="live-match-{{ match.id }}" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 15px;">
+                            <h4 style="margin: 0; font-size: 18px;">{{ match.title }}</h4>
+                            <p style="margin: 5px 0; color: #555;">{{ match.date }}</p>
+                            <p style="margin: 5px 0; color: #007bff;">Live Now
+                                {% if match.live_stream_url %}
+                                    - <a href="{% url 'match_detail' match.id %}" target="_blank" style="color: #007bff; text-decoration: none;">Watch Live</a>
+                                    <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream. To ensure uninterrupted viewing and protect your browsing experience, we recommend using an adblocker.</span>
+                                {% endif %}
+                            </p>
+                            <a href="{% url 'donate' %}" class="btn btn-primary" style="background-color: #28a745; border: none;">Donate</a>
                         </div>
                     {% endfor %}
                 {% else %}
@@ -108,24 +97,16 @@
             <h2 style="margin-bottom: 20px; color: #333;">Upcoming Matches</h2>
             <div id="upcoming-matches">
                 {% if matches %}
-                    {% regroup matches by league as league_groups %}
-                    {% for league_group in league_groups %}
-                        <div id="upcoming-league-{{ forloop.counter }}" class="league-container">
-                            <h3 style="margin-bottom: 15px; color: #555;">{{ league_group.grouper }}</h3>
-                            <div class="matches" style="display: flex; flex-direction: column; gap: 15px;">
-                                {% for match in league_group.list %}
-                                    {% if not match.is_live %}
-                                        <div id="match-{{ match.id }}" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 15px;">
-                                            <h4 style="margin: 0; font-size: 18px;">{{ match.title }}</h4>
-                                            <p style="margin: 5px 0; color: #555;">{{ match.date }}</p>
-                                            <p style="margin: 5px 0;">Starts in <span id="countdown-{{ match.id }}" data-start-time="{{ match.date|date:'Y-m-d H:i:s' }}"></span></p>
-                                            <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream. To ensure uninterrupted viewing and protect your browsing experience, we recommend using an adblocker.</span>
-                                            <a href="{% url 'donate' %}" class="btn btn-primary" style="background-color: #28a745; border: none;">Donate</a>
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
+                    {% for match in matches %}
+                        {% if not match.is_live %}
+                            <div id="match-{{ match.id }}" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 15px;">
+                                <h4 style="margin: 0; font-size: 18px;">{{ match.title }}</h4>
+                                <p style="margin: 5px 0; color: #555;">{{ match.date }}</p>
+                                <p style="margin: 5px 0;">Starts in <span id="countdown-{{ match.id }}" data-start-time="{{ match.date|date:'Y-m-d H:i:s' }}"></span></p>
+                                <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream. To ensure uninterrupted viewing and protect your browsing experience, we recommend using an adblocker.</span>
+                                <a href="{% url 'donate' %}" class="btn btn-primary" style="background-color: #28a745; border: none;">Donate</a>
                             </div>
-                        </div>
+                        {% endif %}
                     {% endfor %}
                 {% else %}
                     <p>No matches currently available.</p>
@@ -157,31 +138,30 @@
 <script>
     // JavaScript for countdown timers
     function updateCountdown() {
-    const countdownElements = document.querySelectorAll('[id^="countdown-"]');
-    countdownElements.forEach(function(el) {
-        // Get the date-time string from the element's attribute
-        const startTimeString = el.getAttribute('data-start-time');
+        const countdownElements = document.querySelectorAll('[id^="countdown-"]');
+        countdownElements.forEach(function(el) {
+            // Get the date-time string from the element's attribute
+            const startTimeString = el.getAttribute('data-start-time');
 
-        // Parse the date-time string in a standardized way
-        const startTime = new Date(startTimeString.replace(' ', 'T')).getTime(); // Replace space with 'T' for ISO format compatibility
+            // Parse the date-time string in a standardized way
+            const startTime = new Date(startTimeString.replace(' ', 'T')).getTime(); // Replace space with 'T' for ISO format compatibility
 
-        const now = new Date().getTime();
-        const timeLeft = startTime - now;
+            const now = new Date().getTime();
+            const timeLeft = startTime - now;
 
-        if (timeLeft > 0) {
-            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-            el.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-        } else {
-            el.textContent = 'Starting soon...';
-        }
-    });
-}
+            if (timeLeft > 0) {
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                el.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            } else {
+                el.textContent = 'Starting soon...';
+            }
+        });
+    }
 
-setInterval(updateCountdown, 1000);
-
+    setInterval(updateCountdown, 1000);
 </script>
 
 {% endblock %}
