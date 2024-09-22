@@ -1,6 +1,6 @@
 import os
 import django
-from datetime import datetime, timedelta
+from datetime import datetime
 import pytz
 from bs4 import BeautifulSoup
 import requests
@@ -68,34 +68,22 @@ def scrape_matches():
 
         for match_item in soup.select('li.f1-podium--item'):
             title = match_item.select_one('.f1-podium--driver span.d-md-inline').get_text(strip=True)
-            date_time_str = match_item.select_one('.f1-podium--time').get_text(strip=True)
+            timestamp = match_item.select_one('.f1-podium--time')['data-zaman']
             match_url = match_item.select_one('a.f1-podium--link')['href']
 
-            # Convert date and time from USA to Nigeria time
+            # Convert the timestamp to Nigeria time
             try:
-                # Parse the date string to a naive datetime object
-                usa_time_naive = datetime.strptime(date_time_str, '%B %d, %Y , %I:%M %p')
+                # Convert timestamp to datetime
+                usa_time = datetime.fromtimestamp(int(timestamp), tz=pytz.timezone('America/New_York'))
                 
-                # Set the timezone to New York and automatically adjust for DST
-                usa_timezone = pytz.timezone('America/New_York')
-                nigeria_timezone = pytz.timezone('Africa/Lagos')
-
-                # Localize the naive datetime to New York timezone (which handles DST automatically)
-                usa_time = usa_timezone.localize(usa_time_naive, is_dst=None)
-
-                # Check if DST is active and adjust manually for a 6-hour difference
-                if usa_time.dst() != timedelta(0):
-                    # If DST is active, add an extra hour to the time difference
-                    nigeria_time = usa_time.astimezone(nigeria_timezone) + timedelta(hours=1)
-                else:
-                    # If DST is not active, apply the regular conversion
-                    nigeria_time = usa_time.astimezone(nigeria_timezone)
+                # Convert to Nigeria time
+                nigeria_time = usa_time.astimezone(pytz.timezone('Africa/Lagos'))
                 
-                print(f"Original date string: {date_time_str}")
-                print(f"USA time (localized): {usa_time} - Is DST? {usa_time.dst() != timedelta(0)}")
+                print(f"Match: {title}")
+                print(f"USA time: {usa_time}")
                 print(f"Nigeria time: {nigeria_time}")
             except ValueError as e:
-                print(f"Error parsing date/time: {date_time_str} - {e}")
+                print(f"Error parsing timestamp: {timestamp} - {e}")
                 continue
 
             # Get the livestream URL
