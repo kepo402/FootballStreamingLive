@@ -3,33 +3,7 @@
 {% block title %}Football Matches{% endblock %}
 
 {% block content %}
-<!-- Donation Section -->
-<div class="donation-section">
-    <h2>Support Our Website</h2>
-    <p>
-        We strive to provide the best content without the interruption of ads. To keep this website running and to continue delivering high-quality content, we need your support. Any donation, even as little as $0.10, will help us maintain and improve our services.
-    </p>
-    <p>
-        Without your support, we may not be able to continue offering content in the way we want. Please consider donating to help us sustain this platform.
-    </p>
-    <button class="donate-button" onclick="window.location.href='{% url 'donate' %}'" style="
-        background-color: #4CAF50; /* Green background */
-        border: none; /* Remove borders */
-        color: white; /* White text */
-        padding: 15px 32px; /* Padding */
-        text-align: center; /* Centered text */
-        text-decoration: none; /* Remove underline */
-        display: inline-block; /* Inline-block display */
-        font-size: 16px; /* Text size */
-        margin: 4px 2px; /* Margin */
-        cursor: pointer; /* Pointer cursor on hover */
-        border-radius: 8px; /* Rounded corners */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow */
-        transition: background-color 0.3s, transform 0.3s; /* Transition for hover effects */
-    " onmouseover="this.style.backgroundColor='#45a049'" onmouseout="this.style.backgroundColor='#4CAF50'" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
-        Donate Now
-    </button>
-</div>
+
 
 <nav class="mb-4" style="padding: 10px; background-color: #f8f9fa;">
     <ul class="nav">
@@ -83,7 +57,7 @@
                                     <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream. To ensure uninterrupted viewing and protect your browsing experience, we recommend using an adblocker.</span>
                                 {% endif %}
                             </p>
-                            <a href="{% url 'donate' %}" class="btn btn-primary" style="background-color: #28a745; border: none;">Donate</a>
+                            
                         </div>
                     {% endfor %}
                 {% else %}
@@ -104,7 +78,7 @@
                                 <p style="margin: 5px 0; color: #555;">{{ match.date }}</p>
                                 <p style="margin: 5px 0;">Starts in <span id="countdown-{{ match.id }}" data-start-time="{{ match.date|date:'Y-m-d H:i:s' }}"></span></p>
                                 <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream. To ensure uninterrupted viewing and protect your browsing experience, we recommend using an adblocker.</span>
-                                <a href="{% url 'donate' %}" class="btn btn-primary" style="background-color: #28a745; border: none;">Donate</a>
+                                
                             </div>
                         {% endif %}
                     {% endfor %}
@@ -133,6 +107,33 @@
             <p>No blog posts available.</p>
         {% endif %}
     </div>
+    <!-- Donation Section -->
+<div class="donation-section">
+    <h2>Support Our Website</h2>
+    <p>
+        We strive to provide the best content without the interruption of ads. To keep this website running and to continue delivering high-quality content, we need your support. Any donation, even as little as $0.10, will help us maintain and improve our services.
+    </p>
+    <p>
+        Without your support, we may not be able to continue offering content in the way we want. Please consider donating to help us sustain this platform.
+    </p>
+    <button class="donate-button" onclick="window.location.href='{% url 'donate' %}'" style="
+        background-color: #4CAF50; /* Green background */
+        border: none; /* Remove borders */
+        color: white; /* White text */
+        padding: 15px 32px; /* Padding */
+        text-align: center; /* Centered text */
+        text-decoration: none; /* Remove underline */
+        display: inline-block; /* Inline-block display */
+        font-size: 16px; /* Text size */
+        margin: 4px 2px; /* Margin */
+        cursor: pointer; /* Pointer cursor on hover */
+        border-radius: 8px; /* Rounded corners */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow */
+        transition: background-color 0.3s, transform 0.3s; /* Transition for hover effects */
+    " onmouseover="this.style.backgroundColor='#45a049'" onmouseout="this.style.backgroundColor='#4CAF50'" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
+        Donate Now
+    </button>
+</div>
 </div>
 
 <script>
