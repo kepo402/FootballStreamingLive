@@ -5,6 +5,8 @@
 {% block content %}
 <!-- Add some global style changes to improve the layout and color scheme -->
 <style>
+    
+    
 
     /* Main content styling */
     .main-content {
@@ -122,14 +124,14 @@
 
 <div class="main-content">
     <!-- Main Content: Live and Upcoming Matches -->
-    <div class="featured-match">
+    <div class="featured-match" style="flex: 2; min-width: 65%;">
         <h2>Featured Match</h2>
         {% if featured_match %}
             <div style="margin-bottom: 20px;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <img src="{{ featured_match.team1_image_url }}" alt="{{ featured_match.team1_name }}" style="width: 45%; height: auto; border-radius: 12px;">
+                    <img src="{{ featured_match.team1_image_url }}" alt="{{ featured_match.team1_name }}" style="width: 45%; height: auto; border-radius: 8px;">
                     <span style="font-size: 24px; font-weight: bold;">VS</span>
-                    <img src="{{ featured_match.team2_image_url }}" alt="{{ featured_match.team2_name }}" style="width: 45%; height: auto; border-radius: 12px;">
+                    <img src="{{ featured_match.team2_image_url }}" alt="{{ featured_match.team2_name }}" style="width: 45%; height: auto; border-radius: 8px;">
                 </div>
                 <h3>{{ featured_match.title }}</h3>
                 <p>{{ featured_match.date }}</p>
@@ -137,7 +139,7 @@
                     {% if featured_match.is_live %}
                         <span class="live-now">Live Now</span>
                         {% if featured_match.live_stream_url %}
-                            - <a href="{% url 'match_detail' featured_match.id %}" target="_blank" style="color: #f76b8a; text-decoration: none;">Watch Live</a>
+                            - <a href="{% url 'match_detail' featured_match.id %}" target="_blank" style="color: #007bff; text-decoration: none;">Watch Live</a>
                             <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream. To ensure uninterrupted viewing and protect your browsing experience, we recommend using an adblocker.</span>
                         {% endif %}
                     {% else %}
@@ -196,7 +198,7 @@
     </div>
 
     <!-- Sidebar: Blog Posts -->
-    <div class="sidebar">
+    <div class="sidebar" style="flex: 1; min-width: 30%;">
         <h2>Sport News Blog</h2>
         {% if blog_posts %}
         <div>
@@ -230,7 +232,7 @@
                 const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-                el.textContent = ${days}d ${hours}h ${minutes}m ${seconds}s;
+                el.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
             } else {
                 el.textContent = 'Starting soon...';
             }
