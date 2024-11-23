@@ -3,18 +3,152 @@
 {% block title %}Football Matches{% endblock %}
 
 {% block content %}
+<!-- Add some global style changes to improve the layout and color scheme -->
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f7fa;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
 
+    .nav {
+        background-color: #007bff;
+        padding: 10px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
 
-<nav class="mb-4" style="padding: 10px; background-color: #f8f9fa;">
+    .nav-item {
+        display: inline-block;
+        margin-right: 20px;
+    }
+
+    .nav-link {
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .nav-link:hover {
+        text-decoration: underline;
+    }
+
+    /* Main content styling */
+    .main-content {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .featured-match {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .match-section {
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    h2, h3, h4 {
+        color: #333;
+        font-weight: 600;
+    }
+
+    h2 {
+        font-size: 24px;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+    }
+
+    h3 {
+        font-size: 20px;
+        color: #555;
+        margin-top: 10px;
+    }
+
+    .match-info {
+        font-size: 16px;
+        color: #555;
+    }
+
+    .match-timer {
+        font-size: 16px;
+        color: #007bff;
+        font-weight: bold;
+    }
+
+    .btn-donate {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .btn-donate:hover {
+        background-color: #218838;
+    }
+
+    .live-now {
+        font-size: 18px;
+        color: #007bff;
+    }
+
+    .sidebar {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .blog-post {
+        margin-bottom: 20px;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 10px;
+    }
+
+    .blog-post img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    .blog-post h3 {
+        margin-top: 10px;
+        color: #007bff;
+    }
+
+    .read-more {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .read-more:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<nav class="mb-4">
     <ul class="nav">
         <li class="nav-item"><a class="nav-link" href="{% url 'match_list' %}">All Matches</a></li>
     </ul>
 </nav>
 
-<div style="display: flex; flex-wrap: wrap; gap: 20px;">
+<div class="main-content">
     <!-- Main Content: Live and Upcoming Matches -->
-    <div style="flex: 2; min-width: 65%; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-        <!-- Featured Match -->
+    <div class="featured-match" style="flex: 2; min-width: 65%;">
         <h2>Featured Match</h2>
         {% if featured_match %}
             <div style="margin-bottom: 20px;">
@@ -27,7 +161,7 @@
                 <p>{{ featured_match.date }}</p>
                 <p id="featured-match-timer">
                     {% if featured_match.is_live %}
-                        Live Now
+                        <span class="live-now">Live Now</span>
                         {% if featured_match.live_stream_url %}
                             - <a href="{% url 'match_detail' featured_match.id %}" target="_blank" style="color: #007bff; text-decoration: none;">Watch Live</a>
                             <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream. To ensure uninterrupted viewing and protect your browsing experience, we recommend using an adblocker.</span>
@@ -36,7 +170,7 @@
                         Starts in <span id="countdown-{{ featured_match.id }}" data-start-time="{{ featured_match.date|date:'Y-m-d H:i:s' }}"></span>
                     {% endif %}
                 </p>
-                <a href="{% url 'donate' %}" class="btn btn-primary" style="margin-top: 10px; background-color: #28a745; border: none;">Donate</a>
+                <button class="btn-donate">Donate</button>
             </div>
         {% else %}
             <p>No featured match available.</p>
@@ -44,20 +178,19 @@
 
         <!-- Live Matches Section -->
         <div style="margin-top: 40px;">
-            <h2 style="margin-bottom: 20px; color: #333;">Live Matches</h2>
-            <div id="live-matches" style="display: flex; flex-direction: column; gap: 15px;">
+            <h2>Live Matches</h2>
+            <div id="live-matches">
                 {% if live_matches %}
                     {% for match in live_matches %}
-                        <div id="live-match-{{ match.id }}" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 15px;">
-                            <h4 style="margin: 0; font-size: 18px;">{{ match.title }}</h4>
-                            <p style="margin: 5px 0; color: #555;">{{ match.date }}</p>
-                            <p style="margin: 5px 0; color: #007bff;">Live Now
+                        <div class="match-section">
+                            <h4>{{ match.title }}</h4>
+                            <p class="match-info">{{ match.date }}</p>
+                            <p class="match-timer">Live Now
                                 {% if match.live_stream_url %}
-                                    - <a href="{% url 'match_detail' match.id %}" target="_blank" style="color: #007bff; text-decoration: none;">Watch Live</a>
+                                    - <a href="{% url 'match_detail' match.id %}" target="_blank" class="read-more">Watch Live</a>
                                     <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream. To ensure uninterrupted viewing and protect your browsing experience, we recommend using an adblocker.</span>
                                 {% endif %}
                             </p>
-                            
                         </div>
                     {% endfor %}
                 {% else %}
@@ -68,17 +201,16 @@
 
         <!-- Upcoming Matches Section -->
         <div style="margin-top: 40px;">
-            <h2 style="margin-bottom: 20px; color: #333;">Upcoming Matches</h2>
+            <h2>Upcoming Matches</h2>
             <div id="upcoming-matches">
                 {% if matches %}
                     {% for match in matches %}
                         {% if not match.is_live %}
-                            <div id="match-{{ match.id }}" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 15px;">
-                                <h4 style="margin: 0; font-size: 18px;">{{ match.title }}</h4>
-                                <p style="margin: 5px 0; color: #555;">{{ match.date }}</p>
-                                <p style="margin: 5px 0;">Starts in <span id="countdown-{{ match.id }}" data-start-time="{{ match.date|date:'Y-m-d H:i:s' }}"></span></p>
+                            <div class="match-section">
+                                <h4>{{ match.title }}</h4>
+                                <p class="match-info">{{ match.date }}</p>
+                                <p>Starts in <span id="countdown-{{ match.id }}" data-start-time="{{ match.date|date:'Y-m-d H:i:s' }}"></span></p>
                                 <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream. To ensure uninterrupted viewing and protect your browsing experience, we recommend using an adblocker.</span>
-                                
                             </div>
                         {% endif %}
                     {% endfor %}
@@ -90,16 +222,16 @@
     </div>
 
     <!-- Sidebar: Blog Posts -->
-    <div style="flex: 1; min-width: 30%; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+    <div class="sidebar" style="flex: 1; min-width: 30%;">
         <h2>Sport News Blog</h2>
         {% if blog_posts %}
         <div>
             {% for blog_post in blog_posts %}
-                <div style="margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
-                    <img src="{{ blog_post.image_url }}" alt="Blog Post Image" style="width: 100%; height: auto; border-radius: 8px;">
-                    <h3 style="margin-top: 10px;">{{ blog_post.title }}</h3>
+                <div class="blog-post">
+                    <img src="{{ blog_post.image_url }}" alt="Blog Post Image">
+                    <h3>{{ blog_post.title }}</h3>
                     <p>{{ blog_post.content|truncatewords:30 }}</p>
-                    <a href="{% url 'blog_post_detail' blog_post.pk %}" style="color: #007bff; text-decoration: none;">Read more</a>
+                    <a href="{% url 'blog_post_detail' blog_post.pk %}" class="read-more">Read more</a>
                 </div>
             {% endfor %}
         </div>
@@ -107,7 +239,6 @@
             <p>No blog posts available.</p>
         {% endif %}
     </div>
-  
 </div>
 
 <script>
@@ -115,12 +246,8 @@
     function updateCountdown() {
         const countdownElements = document.querySelectorAll('[id^="countdown-"]');
         countdownElements.forEach(function(el) {
-            // Get the date-time string from the element's attribute
             const startTimeString = el.getAttribute('data-start-time');
-
-            // Parse the date-time string in a standardized way
-            const startTime = new Date(startTimeString.replace(' ', 'T')).getTime(); // Replace space with 'T' for ISO format compatibility
-
+            const startTime = new Date(startTimeString.replace(' ', 'T')).getTime();
             const now = new Date().getTime();
             const timeLeft = startTime - now;
 
