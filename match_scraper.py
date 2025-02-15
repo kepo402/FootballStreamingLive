@@ -9,149 +9,80 @@ import requests
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'football_streaming_site.settings')
 django.setup()
 
-from matches.models import Match, League
+from matches.models import Match
 
-# Function to retrieve the live stream URL
-def get_live_stream_url(match_url):
+def get_embed_url(match_url):
+    """Extracts the iframe embed URL from the match page."""
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"}
+
     try:
-        response = requests.get(match_url)
-        soup = BeautifulSoup(response.content, 'html.parser')
-
-        # Find the textarea that contains the iframe
-        textarea = soup.find('textarea')
-        if textarea:
-            # Extract the iframe code from the textarea
-            iframe_code = textarea.get_text()
-
-            # Debug: Print the extracted iframe content
-            print(f"Extracted iframe content from {match_url}:")
-            print(iframe_code)  # Debugging the extracted iframe content
-
-            # Find the src attribute in the iframe code
-            start_index = iframe_code.find('src="') + len('src="')
-            end_index = iframe_code.find('"', start_index)
-
-            if start_index != -1 and end_index != -1:
-                return iframe_code[start_index:end_index]
-            else:
-                print(f"Error: Couldn't find iframe src in {match_url}")
-                return ''
-        else:
-            print(f"Error: No textarea found in {match_url}")
-            return ''
-        
+        response = requests.get(match_url, headers=headers, timeout=10)
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.text, "html.parser")
+            iframe = soup.find("iframe")  # Find the first iframe
+            if iframe:
+                return iframe.get("src")  # Extract the iframe URL
     except Exception as e:
-        print(f"Error retrieving live stream URL from {match_url}: {e}")
-        return ''
-
-# Function to determine the game type from the URL
-def determine_game_type(url):
-    """Determine the game type from the URL."""
-    if 'soccerstreams' in url:
-        return Match.SOCCER
-    elif 'nbastreams' in url:
-        return Match.NBA
-    elif 'nhlstreams' in url:
-        return Match.NHL
-    elif 'mlbstreams' in url:
-        return Match.MLB
-    elif 'mmastreams' in url:
-        return Match.MMA
-    elif 'boxingstreams' in url:
-        return Match.BOXING
-    elif 'nflstreams' in url:
-        return Match.NFL
-    elif 'cfbstreams' in url:
-        return Match.CFB
-    elif 'motorsportsstreams' in url:
-        return Match.MOTOR_SPORTS
-    else:
-        return Match.SOCCER  # Default game type if not matched
-
-# Function to scrape matches
-def scrape_matches():
-    base_urls = {
-        'soccer': "https://v1.bestsolaris.com/soccerstreams/",
-        'nba': "https://v1.bestsolaris.com/nbastreams/",
-        'nhl': 'https://v1.bestsolaris.com/nhlstreams/',
-        'mlb': 'https://v1.bestsolaris.com/mlbstreams/',
-        'mma': 'https://v1.bestsolaris.com/mmastreams/',
-        'boxing': 'https://v1.bestsolaris.com/boxingstreams/',
-        # Add more base URLs for other game types here
-    }
+        print(f"Error fetching iframe from {match_url}: {e}")
     
-    all_matches = []
+    return None  # Return None if no iframe is found
 
-    for game_type, url in base_urls.items():
-        response = requests.get(url)
-        soup = BeautifulSoup(response.content, 'html.parser')
+def scrape_matches():
+    url = "https://crack-streams.live/Soccer-stream/"
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"}
 
-        matches = []
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        if response.status_code != 200:
+            print(f"Failed to fetch data, status code: {response.status_code}")
+            return
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed: {e}")
+        return
 
-        # Iterate over the match items
-        for match_item in soup.select('li.f1-podium--item'):
-            # Extract match title
-            title = match_item.select_one('.f1-podium--driver span.d-md-inline').get_text(strip=True)
-            
-            # Try to extract match timestamp
-            time_element = match_item.select_one('.f1-podium--time')
-            if time_element and 'data-zaman' in time_element.attrs:
-                timestamp = time_element['data-zaman']
-            else:
-                print(f"Warning: No timestamp found for match: {title}. Skipping this match.")
-                print(f"HTML of match item: {match_item.prettify()}")
-                continue  # Skip this match if timestamp is not found
+    soup = BeautifulSoup(response.content, 'html.parser')
+    match_listings = soup.find_all('a', class_='btn btn-default btn-lg btn-block')
 
-            # Extract match URL
-            match_url = match_item.select_one('a.f1-podium--link')['href']
+    for match in match_listings:
+        match_url = match['href']  # Main match page URL
+        title = match.find('h4', class_='media-heading').text.strip()
+        date_time_text = match.find('p').text.strip()
 
-            # Convert the timestamp to Nigeria time
-            try:
-                # Convert timestamp to datetime (USA time, New York)
-                usa_time = datetime.fromtimestamp(int(timestamp), tz=pytz.timezone('America/New_York'))
-                
-                # Convert to Nigeria time
-                nigeria_time = usa_time.astimezone(pytz.timezone('Africa/Lagos'))
-                
-                # Debug output to check the match details
-                print(f"Match: {title}")
-                print(f"USA time: {usa_time}")
-                print(f"Nigeria time: {nigeria_time}")
-            except ValueError as e:
-                print(f"Error parsing timestamp: {timestamp} - {e}")
-                continue
+        # Extract time and date
+        try:
+            time_part, date_part = date_time_text.split(' - ')
 
-            # Get the livestream URL
-            live_stream_url = get_live_stream_url(match_url)
+            # Convert to datetime object in Eastern Time (ET)
+            et_tz = pytz.timezone('America/New_York')
+            naive_dt = datetime.strptime(f"{date_part} {time_part}", "%m/%d/%Y %I:%M %p ET")
+            et_time = et_tz.localize(naive_dt)
 
-            # Save the match to the database
-            try:
-                match, created = Match.objects.update_or_create(
-                    title=title,
-                    date=nigeria_time,
-                    defaults={
-                        'live_stream_url': live_stream_url,
-                        'is_featured': False,
-                        # You can update the logic for selecting a league
-                        #'league': League.objects.first(),  # Placeholder league logic
-                        'team1_name': 'Team 1',  # Placeholder team name
-                        'team1_image_url': '',  # Placeholder team image
-                        'team2_name': 'Team 2',  # Placeholder team name
-                        'team2_image_url': '',  # Placeholder team image
-                        'game_type': determine_game_type(url),  # Determine game type (e.g., soccer, NBA, etc.)
-                    }
-                )
-                matches.append(match)
-            except Exception as e:
-                print(f"Error saving match: {e}")
+            # Convert to Nigeria time (WAT)
+            nigeria_time = et_time.astimezone(pytz.timezone('Africa/Lagos'))
+        except Exception as e:
+            print(f"Error parsing date/time for {title}: {e}")
+            continue
 
-        all_matches.extend(matches)
+        # Extract the iframe URL
+        embed_url = get_embed_url(match_url)
+        if not embed_url:
+            print(f"No iframe found for {title}")
+            continue  # Skip if there's no valid embed link
 
-    return all_matches
+        # Save match to the database
+        match_obj, created = Match.objects.update_or_create(
+            title=title,
+            date=nigeria_time,
+            defaults={
+                'live_stream_url': embed_url,  # Save the direct iframe URL
+                'is_featured': False,
+                'game_type': Match.SOCCER,
+                'team1_name': 'Team 1',
+                'team2_name': 'Team 2',
+            }
+        )
 
-# Main entry point for the script
+        print(f"Saved: {title} at {nigeria_time}, Iframe URL: {embed_url}")
+
 if __name__ == '__main__':
-    scrape_matches() 
-
-
-
+    scrape_matches()
