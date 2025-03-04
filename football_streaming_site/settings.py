@@ -30,14 +30,14 @@ ALLOWED_HOSTS = [
     'localhost', 
     '127.0.0.1', 
     'sportstream.vercel.app',
-    '4f1a-102-89-47-36.ngrok-free.app',
+    
     
 
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://sportstream.vercel.app',
-    'https://4f1a-102-89-47-36.ngrok-free.app',
+    
 ]
 
 
