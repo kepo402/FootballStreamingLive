@@ -1,132 +1,286 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Football Streaming{% endblock %}</title>
+    <title>{% block title %}StreamSporty | Premium Live Sports{% endblock %}</title>
 
     <!-- External CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Font Awesome CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Outfit for a premium, geometric look -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Twitter Meta Tags Block -->
     {% block twitter_meta_tags %}
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@streamsporty">
-    <meta name="twitter:title" content="Football Streaming">
-    <meta name="twitter:description" content="Watch live football matches here.">
+    <meta name="twitter:title" content="StreamSporty - Live Football">
+    <meta name="twitter:description" content="Experience premium live football streaming.">
     <meta name="twitter:image" content="{% static 'images/default-thumbnail.jpg' %}">
     {% endblock %}
 
     <!-- Custom CSS -->
     <style>
-        /* Apply Google Font */
-        body, h1, h2, h3, h4, p, a {
-            font-family: 'Poppins', sans-serif;
+        :root {
+            /* Core Palette */
+            --bg-dark: #0f172a;
+            --bg-darker: #020617;
+            --accent-primary: #8b5cf6;
+            /* Violet */
+            --accent-secondary: #ec4899;
+            /* Pink */
+            --gradient-main: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+
+            /* Glassmorphism */
+            --glass-bg: rgba(15, 23, 42, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-blur: blur(16px);
+
+            /* Text */
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
         }
 
-        body{
-               background-color: black;
-        }
-
-        /* Header Styling */
-        header {
-            background: linear-gradient(45deg, #1e3c72, #2a5298);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        header h1 {
-            font-weight: 600;
-            margin: 0;
-        }
-        header nav ul {
-            margin: 0;
-            padding: 0;
-            list-style: none;
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
             display: flex;
+            flex-direction: column;
         }
-        header nav ul li {
-            margin-right: 15px;
+
+        /* Ambient Global Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -20%;
+            left: -10%;
+            width: 50%;
+            height: 50%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15), transparent 60%);
+            z-index: -1;
+            pointer-events: none;
+            filter: blur(80px);
         }
-        header nav ul li a {
-            color: #ffffff;
-            text-decoration: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            transition: background 0.3s ease;
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -20%;
+            right: -10%;
+            width: 50%;
+            height: 50%;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.15), transparent 60%);
+            z-index: -1;
+            pointer-events: none;
+            filter: blur(80px);
         }
-        header nav ul li a:hover {
-            background: rgba(255, 255, 255, 0.1);
+
+        /* --- Header --- */
+        header {
+            position: sticky;
+            top: 20px;
+            z-index: 1000;
+            margin: 0 20px;
+            border-radius: 16px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
         }
-        /* Active link style */
+
+        .navbar {
+            padding: 10px 20px;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.8rem;
+            color: white !important;
+            letter-spacing: -0.03em;
+        }
+
+        .brand-highlight {
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Navigation Links */
+        .nav-link {
+            color: var(--text-muted) !important;
+            font-weight: 500;
+            padding: 8px 16px !important;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover,
         .nav-link.active {
-            font-weight: bold;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
+            color: white !important;
+            background: rgba(255, 255, 255, 0.05);
         }
 
-       
-        /* Footer Styling */
-        footer {
-            background: linear-gradient(45deg, #2a5298, #1e3c72);
-            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
-        }
-        footer p {
-            margin: 0;
-        }
-        footer .social-icons a {
-            color: #ffffff;
-            margin: 0 10px;
-            font-size: 20px;
-            transition: color 0.3s ease;
-        }
-        footer .social-icons a:hover {
-            color: #50b3a2;
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: var(--accent-secondary);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-secondary);
         }
 
-        /* Button Styling */
-        .btn-primary {
-            background-color: #50b3a2;
+        /* Mobile Menu */
+        .navbar-toggler {
             border: none;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-        .btn-primary:hover {
-            background-color: #43a18c;
-            transform: translateY(-2px);
+            padding: 0;
+            color: white;
         }
 
-        /* Link Styling */
-        a {
-            color: #2a5298;
-            text-decoration: none;
-            transition: color 0.3s ease;
+        /footer {
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            z-index: 9999 !important;
         }
-        a:hover {
-            color: #1e3c72;
+
+        main {
+            padding-bottom: 220px !important;
+        }
+
+        .footer-logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .social-icons {
+            margin-top: 20px;
+        }
+
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            margin: 0 8px;
+            font-size: 1.2rem;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid transparent;
+        }
+
+        .social-btn:hover {
+            background: var(--gradient-main);
+            transform: translateY(-5px) scale(1.1);
+            color: white;
+            box-shadow: 0 10px 20px -5px rgba(236, 72, 153, 0.4);
+        }
+
+        /* Common Utility overrides */
+        .btn-primary {
+            background: var(--gradient-main);
+            border: none;
+            border-radius: 12px;
+            padding: 10px 25px;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
         }
     </style>
 </head>
+
 <body>
-    <header class="text-white py-4">
-        <div class="container">
-            <h1 class="mb-0">StreamSporty</h1>
-            <nav>
-                <ul class="nav">
-                    <li class="nav-item"><a class="nav-link {% if current_game_type == 'soccer' %}active{% endif %}" href="{% url 'match_list_by_sport' 'soccer' %}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link {% if current_game_type == 'nba' %}active{% endif %}" href="{% url 'match_list_by_sport' 'nba' %}">NBA Streams</a></li>
-                    <li class="nav-item"><a class="nav-link {% if current_game_type == 'mlb' %}active{% endif %}" href="{% url 'match_list_by_sport' 'mlb' %}">MLB Streams</a></li>
-                    <li class="nav-item"><a class="nav-link {% if current_game_type == 'nfl' %}active{% endif %}" href="{% url 'match_list_by_sport' 'nfl' %}">NFL Streams</a></li>
-                    <li class="nav-item"><a class="nav-link {% if current_game_type == 'mma' %}active{% endif %}" href="{% url 'match_list_by_sport' 'mma' %}">MMA Streams</a></li>
-                    <li class="nav-item"><a class="nav-link {% if current_game_type == 'soccer' %}active{% endif %}" href="{% url 'match_list_by_sport' 'soccer' %}">Soccer Streams</a></li>
-                    <li class="nav-item"><a class="nav-link {% if current_game_type == 'nhl' %}active{% endif %}" href="{% url 'match_list_by_sport' 'nhl' %}">NHL Streams</a></li>
-                    <li class="nav-item"><a class="nav-link {% if current_game_type == 'nhl' %}active{% endif %}" href="{% url 'match_list_by_sport' 'boxing' %}">BOXING Streams</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'blog_list' %}">Blog</a></li>
-                </ul>
-            </nav>
-        </div>
+
+    <header>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{% url 'match_list' %}">
+                    Stream<span class="brand-highlight">Sporty</span>
+                </a>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNav">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav ml-auto align-items-center">
+                        <li class="nav-item">
+                            <a class="nav-link {% if not current_game_type or current_game_type == 'soccer' %}active{% endif %}"
+                                href="{% url 'match_list_by_sport' 'soccer' %}">Football</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if current_game_type == 'nba' %}active{% endif %}"
+                                href="{% url 'match_list_by_sport' 'nba' %}">NBA</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if current_game_type == 'mlb' %}active{% endif %}"
+                                href="{% url 'match_list_by_sport' 'mlb' %}">MLB</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if current_game_type == 'nfl' %}active{% endif %}"
+                                href="{% url 'match_list_by_sport' 'nfl' %}">NFL</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if current_game_type == 'mma' %}active{% endif %}"
+                                href="{% url 'match_list_by_sport' 'mma' %}">MMA/UFC</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if current_game_type == 'boxing' %}active{% endif %}"
+                                href="{% url 'match_list_by_sport' 'boxing' %}">Boxing</a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a class="nav-link" href="{% url 'blog_list' %}">News</a>
+                        </li> -->
+                        <li class="nav-item ml-md-3">
+                            <a class="btn btn-primary btn-sm px-4 shadow-sm" href="#" style="border-radius: 50px;">
+                                <i class="fas fa-crown mr-2"></i> Premium
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
     </header>
 
     <main>
@@ -136,20 +290,28 @@
         </div>
     </main>
 
-    <footer class="text-white py-3">
-        <div class="container text-center">
-            
-            <p>&copy; {% now "Y" %} Football Streaming. All rights reserved.</p>
+    <footer class="text-white text-center">
+        <div class="container">
+            <a class="footer-logo text-white text-decoration-none" href="#">
+                Stream<span class="brand-highlight">Sporty</span>
+            </a>
+            <p class="text-muted" style="margin-bottom: 25px;">
+                &copy; {% now "Y" %} The best destination for live sports streaming. <br>
+                <small style="opacity: 0.6;">All streams are aggregated from 3rd party open sources.</small>
+            </p>
 
             <div class="social-icons">
-                <a href="https://facebook.com" aria-label="Facebook">
+                <a href="https://facebook.com" class="social-btn" aria-label="Facebook">
                     <i class="fab fa-facebook-f"></i>
                 </a>
-                <a href="https://x.com/streamsporty" aria-label="Twitter">
+                <a href="https://x.com/streamsporty" class="social-btn" aria-label="Twitter">
                     <i class="fab fa-twitter"></i>
                 </a>
-                <a href="https://instagram.com" aria-label="Instagram">
+                <a href="https://instagram.com" class="social-btn" aria-label="Instagram">
                     <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="social-btn" aria-label="Discord">
+                    <i class="fab fa-discord"></i>
                 </a>
             </div>
         </div>
@@ -161,5 +323,22 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <!-- Custom JS -->
     <script src="{% static 'js/scripts.js' %}"></script>
+
+    <script>
+        // Add subtle parallax or scroll effect to header
+        window.addEventListener('scroll', function () {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.top = '10px';
+                header.style.margin = '0 10px';
+                header.style.background = 'rgba(15, 23, 42, 0.9)';
+            } else {
+                header.style.top = '20px';
+                header.style.margin = '0 20px';
+                header.style.background = 'var(--glass-bg)';
+            }
+        });
+    </script>
 </body>
+
 </html>

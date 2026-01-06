@@ -1,251 +1,462 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Football Matches{% endblock %}
+{% block title %}Stream Hub | Modern{% endblock %}
 
 {% block content %}
-<!-- Add some global style changes to improve the layout and color scheme -->
+<!-- Font: Inter (Modern Tech Standard) -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-    
-
-
-    /* Main content styling */
-    .main-content {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-        
-        
+    /* --- MODERN AURORA THEME --- */
+    :root {
+        --bg-deep: #050507;
+        --glass-surface: rgba(255, 255, 255, 0.03);
+        --glass-border: rgba(255, 255, 255, 0.08);
+        --accent-cyan: #00f0ff;
+        --accent-violet: #7000ff;
+        --accent-emerald: #00ff9d;
+        --font-modern: 'Inter', sans-serif;
     }
 
-    .featured-match {
-        background-color: black;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        flex: 2;
-        min-width: 65%;
-        color: white;
+    body {
+        background-color: var(--bg-deep) !important;
+        font-family: var(--font-modern) !important;
+        color: #e5e7eb;
+        /* tailwind gray-200 */
+        overflow-x: hidden;
     }
 
-    .match-section {
-        background-color: black; /* Light pastel background for sections */
-        border-radius: 12px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-        padding: 20px;
-        margin-bottom: 20px;
-        color: white;
+    /* --- AURORA BACKGROUND --- */
+    .aurora-bg {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background: var(--bg-deep);
+        overflow: hidden;
     }
 
-    h2, h3, h4 {
-        color: #5e2a84; /* Dark Purple for headings */
-        font-weight: 700;
+    .aurora-blob {
+        position: absolute;
+        filter: blur(100px);
+        opacity: 0.25;
+        border-radius: 50%;
+        animation: drift 20s infinite alternate;
     }
 
-    h2 {
-        font-size: 26px;
-        border-bottom: 3px solid #f76b8a;
-        padding-bottom: 12px;
+    .blob-1 {
+        top: -10%;
+        left: 20%;
+        width: 40vw;
+        height: 40vw;
+        background: var(--accent-violet);
     }
 
-    h3 {
-        font-size: 22px;
-        color: #5e2a84;
-        margin-top: 12px;
+    .blob-2 {
+        bottom: -10%;
+        right: 10%;
+        width: 50vw;
+        height: 50vw;
+        background: var(--accent-cyan);
+        animation-delay: -5s;
     }
 
-    .match-info {
-        font-size: 16px;
-        color: #555;
+    .blob-3 {
+        top: 40%;
+        left: -10%;
+        width: 30vw;
+        height: 30vw;
+        background: var(--accent-emerald);
+        animation-delay: -10s;
     }
 
-    .match-timer {
-        font-size: 16px;
-        color: #f76b8a;
-        font-weight: bold;
+    @keyframes drift {
+        0% {
+            transform: translate(0, 0);
+        }
+
+        100% {
+            transform: translate(30px, 30px);
+        }
     }
 
-    .btn-donate {
-        background-color: #f9a825; /* Golden yellow for call-to-action buttons */
-        color: white;
-        padding: 12px 24px;
-        border: none;
+    /* --- GLASS COMPONENT --- */
+    .glass-card {
+        background: var(--glass-surface);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 24px;
+        transition: all 0.2s ease-out;
+    }
+
+    .glass-card:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .glass-panel {
+        background: rgba(10, 10, 12, 0.6);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--glass-border);
+    }
+
+    /* --- TYPOGRAPHY & ELEMENTS --- */
+    .text-gradient {
+        background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .modern-badge {
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 4px 12px;
+        border-radius: 99px;
+        letter-spacing: 0.025em;
+    }
+
+    .badge-live {
+        background: rgba(239, 68, 68, 0.15);
+        color: #fca5a5;
+        box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+    }
+
+    .badge-upcoming {
+        background: rgba(59, 130, 246, 0.15);
+        color: #93c5fd;
+    }
+
+    .badge-gold {
+        background: linear-gradient(135deg, rgba(234, 179, 8, 0.2), rgba(234, 179, 8, 0.05));
+        color: #fde047;
+        border: 1px solid rgba(234, 179, 8, 0.2);
+    }
+
+    .btn-modern {
+        background: white;
+        color: black;
+        font-weight: 600;
+        padding: 10px 20px;
         border-radius: 8px;
-        font-size: 18px;
-        cursor: pointer;
+        border: none;
+        transition: 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
     }
 
-    .btn-donate:hover {
-        background-color: #f57f17; /* Darker shade of yellow */
-    }
-
-    .live-now {
-        font-size: 20px;
-        color: #f76b8a; /* Soft coral color for live status */
-    }
-
-    .sidebar {
-        background-color: black;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        flex: 1;
-        min-width: 30%;
-    }
-
-    .blog-post {
-        margin-bottom: 20px;
-        border-bottom: 1px solid #ddd;
-        padding-bottom: 12px;
-        color: white;
-        
-    }
-
-    .blog-post img {
-        width: 100%;
-        height: auto;
-        border-radius: 12px;
-    }
-
-    .blog-post h3 {
-        margin-top: 10px;
-        color: #f76b8a;
-    }
-
-    .read-more {
-        color: #f76b8a;
+    .btn-modern:hover {
+        background: #f3f4f6;
+        transform: translateY(-1px);
         text-decoration: none;
-        font-weight: bold;
+        color: black;
     }
 
-    .read-more:hover {
-        text-decoration: underline;
+    .btn-glass {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        transition: 0.2s;
+    }
+
+    .btn-glass:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        text-decoration: none;
+    }
+
+    /* --- LAYOUT GRID --- */
+    .bento-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 20px;
+        padding-bottom: 120px;
+    }
+
+    .col-span-12 {
+        grid-column: span 12;
+    }
+
+    .col-span-8 {
+        grid-column: span 8;
+    }
+
+    .col-span-4 {
+        grid-column: span 4;
+    }
+
+    .col-span-6 {
+        grid-column: span 6;
+    }
+
+    @media (max-width: 992px) {
+
+        .col-span-8,
+        .col-span-4,
+        .col-span-6 {
+            grid-column: span 12;
+        }
     }
 </style>
 
-<nav class="mb-4">
-    <ul class="nav">
-        <li class="nav-item"><a class="nav-link" href="{% url 'match_list' %}">All Matches</a></li>
-    </ul>
-</nav>
+<!-- Aurora Background -->
+<div class="aurora-bg">
+    <div class="aurora-blob blob-1"></div>
+    <div class="aurora-blob blob-2"></div>
+    <div class="aurora-blob blob-3"></div>
+</div>
 
-<div class="main-content">
-    <!-- Main Content: Live and Upcoming Matches -->
-    <div class="featured-match" style="flex: 2; min-width: 65%;">
-        <h2>Featured Match</h2>
-        {% if featured_match %}
-            <div style="margin-bottom: 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <img src="{{ featured_match.team1_image_url }}" alt="{{ featured_match.team1_name }}" style="width: 45%; height: auto; border-radius: 8px;">
-                    <span style="font-size: 24px; font-weight: bold;">VS</span>
-                    <img src="{{ featured_match.team2_image_url }}" alt="{{ featured_match.team2_name }}" style="width: 45%; height: auto; border-radius: 8px;">
-                </div>
-                <h3>{{ featured_match.title }}</h3>
-                <p>{{ featured_match.date }}</p>
-                <p id="featured-match-timer">
-                    {% if featured_match.is_live %}
-                        <span class="live-now">Live Now</span>
-                        {% if featured_match.live_stream_url %}
-                            - <a href="{% url 'match_detail' featured_match.id %}" target="_blank" style="color: #007bff; text-decoration: none;">Watch Live</a>
-                            <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream. To ensure uninterrupted viewing and protect your browsing experience, we recommend using an adblocker.</span>
-                        {% endif %}
-                    {% else %}
-                        Starts in <span id="countdown-{{ featured_match.id }}" data-start-time="{{ featured_match.date|date:'Y-m-d H:i:s' }}"></span>
-                    {% endif %}
-                </p>
-                
-            </div>
-        {% else %}
-            <p>No featured match available.</p>
-        {% endif %}
+<div class="container py-5">
 
-        <!-- Live Matches Section -->
-        <div style="margin-top: 40px;">
-            <h2>Live Matches</h2>
-            <div id="live-matches">
-                {% if live_matches %}
-                    {% for match in live_matches %}
-                        <div class="match-section">
-                            <h4>{{ match.title }}</h4>
-                            <p class="match-info">{{ match.date }}</p>
-                            <p class="match-timer">Live Now
-                                {% if match.live_stream_url %}
-                                    - <a href="{% url 'match_detail' match.id %}" target="_blank" class="read-more">Watch Live</a>
-                                    <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream. To ensure uninterrupted viewing and protect your browsing experience, we recommend using an adblocker.</span>
-                                {% endif %}
-                            </p>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <p>No live matches currently available.</p>
-                {% endif %}
-            </div>
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-end mb-5">
+        <div>
+            <h1 class="font-weight-bold mb-2 text-gradient" style="font-size: 2.5rem; letter-spacing: -1px;">Discover
+            </h1>
+            <p class="text-white-50 m-0">Live sports, tournaments, and exclusive events.</p>
         </div>
-
-        <!-- Upcoming Matches Section -->
-        <div style="margin-top: 40px;">
-            <h2>Upcoming Matches</h2>
-            <div id="upcoming-matches">
-                {% if matches %}
-                    {% for match in matches %}
-                        {% if not match.is_live %}
-                            <div class="match-section">
-                                <h4>{{ match.title }}</h4>
-                                <p class="match-info">{{ match.date }}</p>
-                                <p>Starts in <span id="countdown-{{ match.id }}" data-start-time="{{ match.date|date:'Y-m-d H:i:s' }}"></span></p>
-                                <span style="display: block; margin-top: 5px; font-size: 14px; color: #555;">For the best experience on mobile, use Google Chrome to stream. To ensure uninterrupted viewing and protect your browsing experience, we recommend using an adblocker.</span>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    <p>No matches currently available.</p>
-                {% endif %}
-            </div>
+        <div class="d-none d-md-block">
+            <span class="text-white-50 small mr-3">SERVER STATUS</span>
+            <span class="modern-badge badge-upcoming" style="color: #4ade80; background: rgba(74, 222, 128, 0.1);">●
+                ONLINE</span>
         </div>
     </div>
 
-    <!-- Sidebar: Blog Posts -->
-    <div class="sidebar" style="flex: 1; min-width: 30%;">
-        <h2>Sport News Blog</h2>
-        {% if blog_posts %}
-        <div>
-            {% for blog_post in blog_posts %}
-                <div class="blog-post">
-                    <img src="{{ blog_post.image_url }}" alt="Blog Post Image">
-                    <h3>{{ blog_post.title }}</h3>
-                    <p>{{ blog_post.content|truncatewords:30 }}</p>
-                    <a href="{% url 'blog_post_detail' blog_post.pk %}" class="read-more">Read more</a>
+    <div class="bento-grid">
+
+        <!-- FEATURED HERO (Span 8) -->
+        <div class="col-span-8">
+            {% if featured_match %}
+            <div class="glass-card h-100 d-flex flex-column justify-content-center p-5"
+                style="border: 1px solid rgba(255,255,255,0.15);">
+                <div class="d-flex align-items-center mb-4">
+                    <span class="modern-badge badge-live mr-2">FEATURED</span>
+                    <span class="text-white-50 small ml-auto">{{ featured_match.date }}</span>
                 </div>
-            {% endfor %}
+
+                <div class="row align-items-center mb-4">
+                    <div class="col-5 text-center">
+                        <img src="{{ featured_match.team1_image_url }}"
+                            style="height: 80px; width: 80px; object-fit: contain;">
+                        <h4 class="font-weight-bold mt-3">{{ featured_match.team1_name }}</h4>
+                    </div>
+                    <div class="col-2 text-center text-white-50 font-weight-light h4">VS</div>
+                    <div class="col-5 text-center">
+                        <img src="{{ featured_match.team2_image_url }}"
+                            style="height: 80px; width: 80px; object-fit: contain;">
+                        <h4 class="font-weight-bold mt-3">{{ featured_match.team2_name }}</h4>
+                    </div>
+                </div>
+
+                <div class="text-center mt-auto">
+                    <h2 class="mb-4" style="letter-spacing: -0.5px;">{{ featured_match.title }}</h2>
+                    {% if featured_match.is_live and featured_match.live_stream_url %}
+                    <a href="{% url 'match_detail' featured_match.id %}" class="btn-modern px-5 py-3">
+                        <i class="fas fa-play"></i> Watch Stream
+                    </a>
+                    {% else %}
+                    <div class="btn-glass px-4" id="cd-hero-{{ featured_match.id }}"
+                        data-start-unix="{{ featured_match.date|date:'U' }}"
+                        data-start-iso="{{ featured_match.date|date:'c' }}">Loading...</div>
+                    {% endif %}
+                </div>
+            </div>
+            {% else %}
+            <div class="glass-card h-100 d-flex align-items-center justify-content-center">
+                <p class="text-white-50">No Featured Matches</p>
+            </div>
+            {% endif %}
         </div>
-        {% else %}
-            <p>No blog posts available.</p>
-        {% endif %}
+
+        <!-- SIDEBAR WIDGETS (Span 4) -->
+        <div class="col-span-4 d-flex flex-column" style="gap: 20px;">
+            <!-- INTRO -->
+            <div class="glass-card">
+                <h5 class="font-weight-bold mb-3">Welcome to Hub</h5>
+                <p class="text-white-50 small mb-4" style="line-height: 1.6;">
+                    The next generation of sports streaming.
+                    Monitor live stats, follow your favorite teams, and host your own tournaments.
+                </p>
+                <div class="d-flex flex-wrap" style="gap: 8px;">
+                    <span class="modern-badge" style="background: rgba(255,255,255,0.1);">Esports</span>
+                    <span class="modern-badge" style="background: rgba(255,255,255,0.1);">Premier</span>
+                    <span class="modern-badge" style="background: rgba(255,255,255,0.1);">Community</span>
+                </div>
+            </div>
+
+            <!-- STATS -->
+            <div class="glass-card flex-grow-1 d-flex flex-column justify-content-center text-center">
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <h3 class="font-weight-bold m-0 text-white">120+</h3>
+                        <small class="text-white-50">Matches</small>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h3 class="font-weight-bold m-0 text-white">8K</h3>
+                        <small class="text-white-50">Viewers</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEWS / BLOG POSTS -->
+            {% if blog_posts %}
+            <div class="glass-card p-0 overflow-hidden">
+                <div class="p-4 border-bottom border-light" style="border-color: rgba(255,255,255,0.05) !important;">
+                    <h5 class="font-weight-bold m-0">Latest News</h5>
+                </div>
+                <div>
+                    {% for post in blog_posts %}
+                    <a href="{% url 'blog_post_detail' post.pk %}"
+                        class="d-flex align-items-center p-3 text-white text-decoration-none"
+                        style="border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.2s; background: rgba(0,0,0,0.2);">
+                        <img src="{{ post.image_url }}"
+                            style="height: 50px; width: 50px; object-fit: cover; border-radius: 8px; margin-right: 15px;">
+                        <div>
+                            <h6 class="m-0 font-weight-bold" style="font-size: 0.95rem;">{{ post.title }}</h6>
+                            <small class="text-white-50">Read Article <i
+                                    class="fas fa-arrow-right ml-1 small"></i></small>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- SERVER SUPPORT CTA -->
+            <div class="glass-card position-relative overflow-hidden"
+                style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 182, 212, 0.05) 100%); border: 1px solid rgba(16, 185, 129, 0.3);">
+
+                <!-- Pulse Glow Effect -->
+                <div
+                    style="position: absolute; top: -50%; right: -50%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(16,185,129,0.4) 0%, transparent 70%); filter: blur(40px); opacity: 0.5;">
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-3 position-relative">
+                    <h5 class="font-weight-bold m-0"
+                        style="color: #6ee7b7; text-shadow: 0 0 20px rgba(16,185,129,0.3);">Server Support</h5>
+                    <div
+                        style="background: rgba(16, 185, 129, 0.2); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-server" style="color: #34d399;"></i>
+                    </div>
+                </div>
+
+                <p class="text-white-50 small mb-4 position-relative">Keep the streams running. Your support pays for
+                    our bandwidth.</p>
+
+                <a href="#" class="btn btn-block font-weight-bold position-relative overflow-hidden"
+                    style="background: linear-gradient(to right, #10b981, #059669); color: white; border-radius: 8px; border: none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);">
+                    <span style="position: relative; z-index: 1;">Support Now</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- LIVE & UPCOMING (Span 12) -->
+        <div class="col-span-12 mt-4">
+            <div class="d-flex align-items-center mb-4">
+                <h4 class="font-weight-bold m-0 mr-3">Live & Upcoming</h4>
+                <div style="height: 1px; flex-grow: 1; background: rgba(255,255,255,0.1);"></div>
+            </div>
+
+            <div class="row">
+                {% if live_matches %}
+                {% for match in live_matches %}
+                <div class="col-md-4 mb-4">
+                    <a href="{% url 'match_detail' match.id %}" class="text-decoration-none">
+                        <div class="glass-card h-100 p-0 overflow-hidden position-relative">
+                            <div class="position-absolute top-0 right-0 p-3">
+                                <span class="modern-badge badge-live">LIVE</span>
+                            </div>
+                            <div class="p-4 mt-4">
+                                <h5 class="font-weight-bold text-white mb-1">{{ match.title }}</h5>
+                                <p class="text-white-50 small m-0">{{ match.league }}</p>
+                            </div>
+                            <div class="px-4 pb-4 mt-auto">
+                                <button class="btn-glass btn-sm w-100">Watch Now</button>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                {% if matches %}
+                {% for match in matches %}
+                {% if not match.is_live %}
+                <div class="col-md-4 mb-4">
+                    <div class="glass-card h-100 p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="modern-badge badge-upcoming">UPCOMING</span>
+                            <small class="text-white-50">{{ match.date|date:"D, H:i" }}</small>
+                        </div>
+                        <h5 class="font-weight-bold text-white mb-2">{{ match.title }}</h5>
+                        <div class="mt-3 pt-3 border-top border-secondary">
+                            <small class="text-white-50">Starts in: <span id="cd-{{ match.id }}"
+                                    data-start-unix="{{ match.date|date:'U' }}"
+                                    data-start-iso="{{ match.date|date:'c' }}">Loading...</span></small>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+
     </div>
 </div>
 
 <script>
-    // JavaScript for countdown timers
-    function updateCountdown() {
-        const countdownElements = document.querySelectorAll('[id^="countdown-"]');
-        countdownElements.forEach(function(el) {
-            const startTimeString = el.getAttribute('data-start-time');
-            const startTime = new Date(startTimeString.replace(' ', 'T')).getTime();
-            const now = new Date().getTime();
-            const timeLeft = startTime - now;
+    document.addEventListener('DOMContentLoaded', () => {
+        // Countdown
+        function updateCountdowns() {
+            document.querySelectorAll('[id^=cd-]').forEach(el => {
+                // Hybrid Parsing: Try Unix first, then ISO
+                const unix = el.getAttribute('data-start-unix');
+                const iso = el.getAttribute('data-start-iso');
 
-            if (timeLeft > 0) {
-                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-                el.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-            } else {
-                el.textContent = 'Starting soon...';
-            }
-        });
-    }
+                let targetTime = 0;
 
-    setInterval(updateCountdown, 1000);
+                if (unix && unix.length > 0) {
+                    targetTime = parseInt(unix, 10) * 1000;
+                } else if (iso && iso.length > 0) {
+                    targetTime = new Date(iso).getTime();
+                }
+
+                if (!targetTime || isNaN(targetTime)) {
+                    el.innerText = "TBA";
+                    return;
+                }
+
+                const now = new Date().getTime();
+                const diff = targetTime - now;
+
+                if (diff > 0) {
+                    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const s = Math.floor((diff % (1000 * 60)) / 1000); // Added seconds
+
+                    if (d > 0) {
+                        el.innerText = `${d}d ${h}h`;
+                    } else {
+                        el.innerText = `${h}h ${m}m ${s}s`;
+                    }
+                } else {
+                    el.innerText = "Live Now";
+                    el.style.color = "#4ade80"; // Green for live
+                }
+            });
+        }
+        setInterval(updateCountdowns, 1000);
+        updateCountdowns();
+    });
 </script>
 
 {% endblock %}
