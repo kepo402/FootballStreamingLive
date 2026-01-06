@@ -3,11 +3,172 @@
 {% block title %}{{ blog_post.title }} - Sport News Blog{% endblock %}
 
 {% block content %}
-<article style="max-width: 800px; margin: 0 auto; padding: 20px; background-color: black; color: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-    <h2 style="font-size: 2em; margin-bottom: 10px; color: white;">{{ blog_post.title }}</h2>
-    <img src="{{ blog_post.image_url }}" style="width: 100%; height: auto; border-radius: 8px; margin-bottom: 20px;" alt="Blog Post Image">
-    <p style="font-size: 1.1em; line-height: 1.6; color: white;">{{ blog_post.content }}</p>
-    <p style="margin-top: 20px; font-style: italic; color: white;">Published on {{ blog_post.created_at|date:"F d, Y" }}</p>
-</article>
-{% endblock %}
+<!-- Modern Geometric Font -->
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
 
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+        --accent-color: #3b82f6; /* Electric Blue */
+        --glass: rgba(255, 255, 255, 0.03);
+        --border: rgba(255, 255, 255, 0.1);
+    }
+
+    body {
+        background-color: #050505;
+        margin: 0;
+    }
+
+    .main-container {
+        font-family: 'Outfit', sans-serif;
+        color: #ffffff;
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        position: relative;
+        border-radius: 24px;
+        overflow: hidden;
+        margin-bottom: -100px; /* Overlap effect */
+        z-index: 1;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    .hero-image {
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60%;
+        background: linear-gradient(to top, rgba(5,5,5,1) 0%, rgba(5,5,5,0) 100%);
+    }
+
+    /* Content Card */
+    .content-card {
+        position: relative;
+        z-index: 2;
+        background: var(--glass);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 50px;
+        margin: 0 40px;
+    }
+
+    .category {
+        color: var(--accent-color);
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 2px;
+        font-size: 0.85rem;
+        margin-bottom: 15px;
+        display: block;
+    }
+
+    .title {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        font-weight: 900;
+        line-height: 1.1;
+        margin: 0 0 25px 0;
+        background: linear-gradient(to right, #fff, #888);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .meta-info {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        color: #888;
+        font-size: 0.95rem;
+        margin-bottom: 40px;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .divider {
+        height: 1px;
+        background: var(--border);
+        margin-bottom: 40px;
+    }
+
+    .article-text {
+        font-size: 1.2rem;
+        line-height: 1.8;
+        color: #d1d1d1;
+        font-weight: 300;
+    }
+
+    .article-text p {
+        margin-bottom: 25px;
+    }
+
+    /* Decorative element */
+    .content-card::before {
+        content: "";
+        position: absolute;
+        top: -1px;
+        left: 50px;
+        right: 50px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+    }
+
+    @media (max-width: 768px) {
+        .content-card {
+            margin: 0 10px;
+            padding: 30px 20px;
+        }
+        .hero-image {
+            height: 350px;
+        }
+        .hero-section {
+            margin-bottom: -50px;
+        }
+    }
+</style>
+
+<div class="main-container">
+    <div class="hero-section">
+        <img src="{{ blog_post.image_url }}" class="hero-image" alt="{{ blog_post.title }}">
+        <div class="hero-overlay"></div>
+    </div>
+
+    <div class="content-card">
+        <span class="category">Trending Now</span>
+        <h1 class="title">{{ blog_post.title }}</h1>
+        
+        <div class="meta-info">
+            <div class="meta-item">
+                <span style="width: 30px; height: 30px; background: #333; border-radius: 50%; display: inline-block;"></span>
+                <span>By Editorial Team</span>
+            </div>
+            <span>•</span>
+            <div class="meta-item">
+                {{ blog_post.created_at|date:"F d, Y" }}
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="article-text">
+            {{ blog_post.content|linebreaks }}
+        </div>
+    </div>
+</div>
+{% endblock %}
