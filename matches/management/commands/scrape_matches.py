@@ -55,7 +55,7 @@ class Command(BaseCommand):
             utc_dt = utc_tz.localize(match_dt)
             nigeria_dt = utc_dt.astimezone(nigeria_tz)
 
-            Match.objects.update_or_create(
+            match, created = Match.objects.get_or_create(
                 title=title,
                 date=nigeria_dt,
                 defaults={
