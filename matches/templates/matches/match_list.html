@@ -4,26 +4,38 @@
 {% block title %}Stream Hub | Modern{% endblock %}
 
 {% block content %}
-<!-- Font: Inter (Modern Tech Standard) -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Font: Inter & Syne (Modern Tech Standard + Creative) -->
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
 
 <style>
     /* --- MODERN AURORA THEME --- */
     :root {
-        --bg-deep: #050507;
-        --glass-surface: rgba(255, 255, 255, 0.03);
-        --glass-border: rgba(255, 255, 255, 0.08);
-        --accent-cyan: #00f0ff;
-        --accent-violet: #7000ff;
-        --accent-emerald: #00ff9d;
-        --font-modern: 'Inter', sans-serif;
+        --bg-deep: #030304;
+        /* Darker, deeper black */
+        --bg-glass: rgba(20, 20, 25, 0.4);
+        --glass-surface: rgba(255, 255, 255, 0.02);
+        --glass-border: rgba(255, 255, 255, 0.06);
+        --glass-highlight: rgba(255, 255, 255, 0.1);
+
+        --accent-primary: #6366f1;
+        /* Indigo */
+        --accent-secondary: #ec4899;
+        /* Pink */
+        --accent-cyan: #06b6d4;
+        /* Cyan */
+        --accent-gold: #f59e0b;
+        /* Amber/Gold */
+
+        --font-body: 'Inter', sans-serif;
+        --font-display: 'Syne', sans-serif;
     }
 
     body {
         background-color: var(--bg-deep) !important;
-        font-family: var(--font-modern) !important;
-        color: #e5e7eb;
-        /* tailwind gray-200 */
+        font-family: var(--font-body) !important;
+        color: #f3f4f6;
         overflow-x: hidden;
     }
 
@@ -32,152 +44,192 @@
         position: fixed;
         inset: 0;
         z-index: -1;
-        background: var(--bg-deep);
+        background: radial-gradient(circle at 50% 0%, #1a1a2e 0%, var(--bg-deep) 70%);
         overflow: hidden;
     }
 
     .aurora-blob {
         position: absolute;
-        filter: blur(100px);
-        opacity: 0.25;
+        filter: blur(80px);
+        /* Slightly less blur for more defined color clouds */
+        opacity: 0.3;
         border-radius: 50%;
-        animation: drift 20s infinite alternate;
+        animation: float 25s infinite ease-in-out alternate;
     }
 
     .blob-1 {
-        top: -10%;
-        left: 20%;
-        width: 40vw;
-        height: 40vw;
-        background: var(--accent-violet);
-    }
-
-    .blob-2 {
-        bottom: -10%;
-        right: 10%;
+        top: -15%;
+        left: 30%;
         width: 50vw;
         height: 50vw;
-        background: var(--accent-cyan);
+        background: radial-gradient(circle, var(--accent-primary), transparent);
         animation-delay: -5s;
     }
 
-    .blob-3 {
-        top: 40%;
-        left: -10%;
-        width: 30vw;
-        height: 30vw;
-        background: var(--accent-emerald);
-        animation-delay: -10s;
+    .blob-2 {
+        bottom: -20%;
+        right: -10%;
+        width: 60vw;
+        height: 60vw;
+        background: radial-gradient(circle, var(--accent-secondary), transparent);
+        animation-delay: -12s;
     }
 
-    @keyframes drift {
+    @keyframes float {
         0% {
-            transform: translate(0, 0);
+            transform: translate(0, 0) rotate(0deg);
+        }
+
+        50% {
+            transform: translate(30px, 20px) rotate(5deg);
         }
 
         100% {
-            transform: translate(30px, 30px);
+            transform: translate(-20px, 40px) rotate(-5deg);
         }
     }
 
-    /* --- GLASS COMPONENT --- */
+    /* --- GLASS COMPONENT SYSTEM --- */
     .glass-card {
         background: var(--glass-surface);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
         border: 1px solid var(--glass-border);
-        border-radius: 16px;
-        padding: 24px;
-        transition: all 0.2s ease-out;
+        border-radius: 20px;
+        padding: 30px;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .glass-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
     }
 
     .glass-card:hover {
-        background: rgba(255, 255, 255, 0.06);
-        border-color: rgba(255, 255, 255, 0.15);
-        transform: translateY(-2px);
+        border-color: var(--glass-highlight);
+        transform: translateY(-4px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
     }
 
-    .glass-panel {
-        background: rgba(10, 10, 12, 0.6);
-        backdrop-filter: blur(20px);
-        border-bottom: 1px solid var(--glass-border);
+    .glass-card:hover::before {
+        opacity: 1;
     }
 
-    /* --- TYPOGRAPHY & ELEMENTS --- */
-    .text-gradient {
-        background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+    /* --- TYPOGRAPHY --- */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+        font-family: var(--font-display);
+        letter-spacing: -0.02em;
+    }
+
+    .text-gradient-hero {
+        background: linear-gradient(135deg, #ffffff 30%, #a5b4fc 100%);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 
-    .modern-badge {
-        font-size: 0.75rem;
-        font-weight: 600;
-        padding: 4px 12px;
-        border-radius: 99px;
-        letter-spacing: 0.025em;
+    .text-gradient-gold {
+        background: linear-gradient(135deg, #fde68a 0%, #d97706 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* --- BADGES & BUTTONS --- */
+    .status-badge {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 6px 14px;
+        border-radius: 100px;
+        letter-spacing: 0.05em;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
     }
 
     .badge-live {
-        background: rgba(239, 68, 68, 0.15);
-        color: #fca5a5;
-        box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+        background: rgba(220, 38, 38, 0.1);
+        color: #ef4444;
+        border: 1px solid rgba(220, 38, 38, 0.2);
+        box-shadow: 0 0 12px rgba(220, 38, 38, 0.15);
+    }
+
+    .badge-live::before {
+        content: '';
+        display: block;
+        width: 6px;
+        height: 6px;
+        background: #ef4444;
+        border-radius: 50%;
+        animation: pulse-red 2s infinite;
+    }
+
+    @keyframes pulse-red {
+        0% {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        50% {
+            transform: scale(1.5);
+            opacity: 0.5;
+        }
+
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
     }
 
     .badge-upcoming {
-        background: rgba(59, 130, 246, 0.15);
-        color: #93c5fd;
+        background: rgba(59, 130, 246, 0.1);
+        color: #60a5fa;
+        border: 1px solid rgba(59, 130, 246, 0.2);
     }
 
-    .badge-gold {
-        background: linear-gradient(135deg, rgba(234, 179, 8, 0.2), rgba(234, 179, 8, 0.05));
-        color: #fde047;
-        border: 1px solid rgba(234, 179, 8, 0.2);
+    .btn-primary-glass {
+        background: rgba(255, 255, 255, 0.08);
+        /* Lighter background */
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-family: var(--font-display);
+        transition: all 0.2s ease;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        width: 100%;
     }
 
-    .btn-modern {
+    .btn-primary-glass:hover {
         background: white;
         color: black;
-        font-weight: 600;
-        padding: 10px 20px;
-        border-radius: 8px;
-        border: none;
-        transition: 0.2s;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .btn-modern:hover {
-        background: #f3f4f6;
-        transform: translateY(-1px);
+        transform: translateY(-2px);
         text-decoration: none;
-        color: black;
+        border-color: white;
     }
 
-    .btn-glass {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: white;
-        padding: 8px 16px;
-        border-radius: 8px;
-        font-size: 0.9rem;
-        transition: 0.2s;
-    }
-
-    .btn-glass:hover {
-        background: rgba(255, 255, 255, 0.1);
-        color: white;
-        text-decoration: none;
-    }
-
-    /* --- LAYOUT GRID --- */
+    /* --- LAYOUT GRID (Bento) --- */
     .bento-grid {
         display: grid;
         grid-template-columns: repeat(12, 1fr);
-        gap: 20px;
-        padding-bottom: 120px;
+        gap: 24px;
+        padding-bottom: 80px;
     }
 
     .col-span-12 {
@@ -192,25 +244,66 @@
         grid-column: span 4;
     }
 
-    .col-span-6 {
-        grid-column: span 6;
-    }
-
     @media (max-width: 992px) {
 
         .col-span-8,
-        .col-span-4,
-        .col-span-6 {
+        .col-span-4 {
             grid-column: span 12;
         }
     }
+
+    /* --- HERO UNIT --- */
+    .hub-hero {
+        position: relative;
+        overflow: hidden;
+        border-radius: 24px;
+        padding: 60px 40px;
+        background: linear-gradient(to right, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3)), url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=2805&auto=format&fit=crop') center/cover;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 320px;
+    }
+
+    .hub-hero::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 100px;
+        background: linear-gradient(to top, var(--bg-deep), transparent);
+    }
+
+    /* --- SUPPORT WIDGET --- */
+    .support-widget {
+        background: linear-gradient(135deg, rgba(40, 40, 40, 0.6) 0%, rgba(20, 20, 20, 0.8) 100%);
+        border: 1px solid rgba(255, 215, 0, 0.15);
+        /* Gold border hint */
+        position: relative;
+    }
+
+    .gold-progress {
+        height: 4px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 2px;
+        margin: 15px 0;
+        overflow: hidden;
+    }
+
+    .gold-progress-bar {
+        height: 100%;
+        width: 65%;
+        background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+    }
 </style>
 
-<!-- Aurora Background -->
+<!-- Background -->
 <div class="aurora-bg">
     <div class="aurora-blob blob-1"></div>
     <div class="aurora-blob blob-2"></div>
-    <div class="aurora-blob blob-3"></div>
 </div>
 
 <div class="container py-5">
@@ -218,110 +311,199 @@
     <!-- HEADER -->
     <div class="d-flex justify-content-between align-items-end mb-5">
         <div>
-            <h1 class="font-weight-bold mb-2 text-gradient" style="font-size: 2.5rem; letter-spacing: -1px;">Discover
-            </h1>
-            <p class="text-white-50 m-0">Live sports, tournaments, and exclusive events.</p>
+            <h5 class="text-uppercase text-white-50 small font-weight-bold mb-2" style="letter-spacing: 2px;">Stream Hub
+            </h5>
+            <h1 class="text-gradient-hero display-4 font-weight-bold m-0">Live Coverage</h1>
         </div>
-        <div class="d-none d-md-block">
-            <span class="text-white-50 small mr-3">SERVER STATUS</span>
-            <span class="modern-badge badge-upcoming" style="color: #4ade80; background: rgba(74, 222, 128, 0.1);">●
-                ONLINE</span>
+        <div class="d-none d-md-flex align-items-center">
+            <div class="d-flex align-items-center px-4 py-2"
+                style="background: rgba(255,255,255,0.03); border-radius: 99px; border: 1px solid rgba(255,255,255,0.05);">
+                <div
+                    style="width: 8px; height: 8px; background: #00ff9d; border-radius: 50%; box-shadow: 0 0 10px #00ff9d; margin-right: 12px;">
+                </div>
+                <span style="font-family: 'Syne'; font-weight: 600; font-size: 0.8rem; color: white;">Systems
+                    Optimal</span>
+            </div>
         </div>
     </div>
 
+    <!-- MAIN GRID -->
     <div class="bento-grid">
 
-        <!-- FEATURED HERO (Span 8) -->
+        <!-- MAIN CONTENT COLUMN (Matches) -->
         <div class="col-span-8">
-            {% if featured_match %}
-            <div class="glass-card h-100 d-flex flex-column justify-content-center p-5"
-                style="border: 1px solid rgba(255,255,255,0.15);">
-                <div class="d-flex align-items-center mb-4">
-                    <span class="modern-badge badge-live mr-2">FEATURED</span>
-                    <span class="text-white-50 small ml-auto">{{ featured_match.date }}</span>
-                </div>
 
-                <div class="row align-items-center mb-4">
-                    <div class="col-5 text-center">
-                        <img src="{{ featured_match.team1_image_url }}"
-                            style="height: 80px; width: 80px; object-fit: contain;">
-                        <h4 class="font-weight-bold mt-3">{{ featured_match.team1_name }}</h4>
-                    </div>
-                    <div class="col-2 text-center text-white-50 font-weight-light h4">VS</div>
-                    <div class="col-5 text-center">
-                        <img src="{{ featured_match.team2_image_url }}"
-                            style="height: 80px; width: 80px; object-fit: contain;">
-                        <h4 class="font-weight-bold mt-3">{{ featured_match.team2_name }}</h4>
-                    </div>
-                </div>
-
-                <div class="text-center mt-auto">
-                    <h2 class="mb-4" style="letter-spacing: -0.5px;">{{ featured_match.title }}</h2>
-                    {% if featured_match.is_live and featured_match.live_stream_url %}
-                    <a href="{% url 'match_detail' featured_match.id %}" class="btn-modern px-5 py-3">
-                        <i class="fas fa-play"></i> Watch Stream
-                    </a>
-                    {% else %}
-                    <div class="btn-glass px-4" id="cd-hero-{{ featured_match.id }}"
-                        data-start-unix="{{ featured_match.date|date:'U' }}"
-                        data-start-iso="{{ featured_match.date|date:'c' }}">Loading...</div>
-                    {% endif %}
+            <!-- HERO BANNER (Replaces Feature Match) -->
+            <div class="hub-hero mb-5">
+                <div style="position: relative; z-index: 10;">
+                    <span class="status-badge" style="background: white; color: black; margin-bottom: 20px;">Premium
+                        Access</span>
+                    <h2 class="font-weight-bold text-white mb-3"
+                        style="font-size: 2.5rem; max-width: 600px; line-height: 1.1;">Experience High-Fidelity Sports
+                        Streaming.</h2>
+                    <p class="text-white-50 mb-4" style="font-size: 1.1rem; max-width: 450px;">Real-time statistics,
+                        multi-angle views, and community interactions in 4K resolution.</p>
                 </div>
             </div>
-            {% else %}
-            <div class="glass-card h-100 d-flex align-items-center justify-content-center">
-                <p class="text-white-50">No Featured Matches</p>
+
+            <!-- LIVE MATCHES TITLE -->
+            <div class="d-flex align-items-center mb-4">
+                <i class="fas fa-broadcast-tower mr-3 text-white"></i>
+                <h4 class="font-weight-bold text-white m-0">Live Broadcasts</h4>
+                <div class="ml-4 flex-grow-1" style="height: 1px; background: rgba(255,255,255,0.08);"></div>
             </div>
-            {% endif %}
+
+            <div class="row mb-5">
+                {% if live_matches %}
+                {% for match in live_matches %}
+                <div class="col-md-6 mb-4">
+                    <div class="glass-card h-100 p-0 d-flex flex-column">
+                        <!-- Header / Badge -->
+                        <div class="p-4 d-flex justify-content-between align-items-start">
+                            <span class="badge-live status-badge">Live</span>
+                            <small class="text-white-50 font-weight-bold">{{ match.league }}</small>
+                        </div>
+
+                        <!-- Teams -->
+                        <div class="px-4 pb-2 mb-3">
+                            <h4 class="text-white font-weight-bold mb-1">{{ match.title }}</h4>
+                            <p class="text-white-50 small">Matchday Live</p>
+                        </div>
+
+                        <!-- Action -->
+                        <div class="mt-auto p-4 border-top" style="border-color: rgba(255,255,255,0.05) !important;">
+                            <a href="{% url 'match_detail' match.id %}" class="btn-primary-glass">
+                                <i class="fas fa-play mr-2"></i> Watch Stream
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="col-12">
+                    <div class="glass-card text-center py-5">
+                        <i class="far fa-clock fa-2x mb-3 text-white-50"></i>
+                        <h5 class="text-white font-weight-bold m-0">No live broadcasts currently.</h5>
+                        <p class="text-white-50 small">Check back later or browse upcoming matches.</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- UPCOMING MATCHES TITLE -->
+            <div class="d-flex align-items-center mb-4">
+                <i class="far fa-calendar-alt mr-3 text-white"></i>
+                <h4 class="font-weight-bold text-white m-0">Upcoming Schedule</h4>
+                <div class="ml-4 flex-grow-1" style="height: 1px; background: rgba(255,255,255,0.08);"></div>
+            </div>
+
+            <div class="row">
+                {% if matches %}
+                {% for match in matches %}
+                {% if not match.is_live %}
+                <div class="col-md-6 mb-4">
+                    <div class="glass-card h-100 d-flex flex-column justify-content-center">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="badge-upcoming status-badge">Upcoming</span>
+                            <span class="text-white-50 small" style="font-family: 'Syne', sans-serif;">
+                                {{ match.date|date:'Y-m-d H:i:s' }}</span>
+                        </div>
+
+                        <h5 class="font-weight-bold text-white mb-2">{{ match.title }}</h5>
+
+                        <!-- Timer -->
+                        <div class="d-flex align-items-center mt-3 text-white-50 small">
+                            <i class="fas fa-stopwatch mr-2 text-primary"></i>
+                            <span id="cd-{{ match.id }}" data-start-unix="{{ match.date|date:'U' }}"
+                                data-start-iso="{{ match.date|date:'c' }}">Calculating...</span>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% else %}
+                <div class="col-12 text-center text-white-50">
+                    <p>No upcoming matches scheduled.</p>
+                </div>
+                {% endif %}
+            </div>
+
         </div>
 
-        <!-- SIDEBAR WIDGETS (Span 4) -->
-        <div class="col-span-4 d-flex flex-column" style="gap: 20px;">
-            <!-- INTRO -->
+        <!-- SIDEBAR (Widgets) -->
+        <div class="col-span-4 d-flex flex-column" style="gap: 24px;">
+
+            <!-- INTRO WIDGET -->
             <div class="glass-card">
-                <h5 class="font-weight-bold mb-3">Welcome to Hub</h5>
+                <h5 class="font-weight-bold text-white mb-2">Welcome Back</h5>
                 <p class="text-white-50 small mb-4" style="line-height: 1.6;">
-                    The next generation of sports streaming.
-                    Monitor live stats, follow your favorite teams, and host your own tournaments.
+                    Your premium gateway to global sports events. Participate in the community and host your own
+                    tournaments.
                 </p>
-                <div class="d-flex flex-wrap" style="gap: 8px;">
-                    <span class="modern-badge" style="background: rgba(255,255,255,0.1);">Esports</span>
-                    <span class="modern-badge" style="background: rgba(255,255,255,0.1);">Premier</span>
-                    <span class="modern-badge" style="background: rgba(255,255,255,0.1);">Community</span>
+                <div class="d-flex flex-wrap gap-2">
+                    <span
+                        style="font-size: 0.7rem; padding: 4px 10px; background: rgba(255,255,255,0.05); border-radius: 4px; color: #a5b4fc;">#esports</span>
+                    <span
+                        style="font-size: 0.7rem; padding: 4px 10px; background: rgba(255,255,255,0.05); border-radius: 4px; color: #a5b4fc;">#premier</span>
                 </div>
             </div>
 
-            <!-- STATS -->
-            <div class="glass-card flex-grow-1 d-flex flex-column justify-content-center text-center">
-                <div class="row">
-                    <div class="col-6 mb-3">
-                        <h3 class="font-weight-bold m-0 text-white">120+</h3>
-                        <small class="text-white-50">Matches</small>
-                    </div>
-                    <div class="col-6 mb-3">
-                        <h3 class="font-weight-bold m-0 text-white">8K</h3>
-                        <small class="text-white-50">Viewers</small>
-                    </div>
+            <!-- PREMIUM DONATE WIDGET -->
+            <div class="glass-card support-widget">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="text-gradient-gold font-weight-bold m-0">Server Contribution</h5>
+                    <i class="fas fa-crown text-warning"></i>
+                </div>
+
+                <p class="text-white-50 small mb-2">Monthly Bandwidth Goal</p>
+
+                <div class="gold-progress">
+                    <div class="gold-progress-bar"></div>
+                </div>
+
+                <div class="d-flex justify-content-between small text-white-50 mb-4 font-weight-bold">
+                    <span>$1,240 raised</span>
+                    <span class="text-white">65%</span>
+                </div>
+
+                <a href="#" class="btn btn-block font-weight-bold d-flex align-items-center justify-content-center"
+                    style="background: linear-gradient(to right, #f59e0b, #d97706); color: black; border-radius: 12px; border: none; padding: 12px; font-family: 'Syne'; transition: 0.2s;">
+                    <i class="fas fa-bolt mr-2"></i> Boost Server
+                </a>
+            </div>
+
+            <!-- STATS MINIMAL -->
+            <div class="glass-card d-flex align-items-center justify-content-between">
+                <div>
+                    <h3 class="font-weight-bold text-white m-0">8.4k</h3>
+                    <small class="text-white-50">Active Viewers</small>
+                </div>
+                <div style="height: 40px; width: 1px; background: rgba(255,255,255,0.1);"></div>
+                <div>
+                    <h3 class="font-weight-bold text-white m-0">142</h3>
+                    <small class="text-white-50">Total Matches</small>
                 </div>
             </div>
 
-            <!-- NEWS / BLOG POSTS -->
+            <!-- BLOG LIST -->
             {% if blog_posts %}
-            <div class="glass-card p-0 overflow-hidden">
-                <div class="p-4 border-bottom border-light" style="border-color: rgba(255,255,255,0.05) !important;">
-                    <h5 class="font-weight-bold m-0">Latest News</h5>
+            <div class="glass-card p-0">
+                <div class="p-4 border-bottom" style="border-color: rgba(255,255,255,0.05);">
+                    <h6 class="font-weight-bold m-0 text-white text-uppercase" style="letter-spacing: 1px;">Recent
+                        Insights</h6>
                 </div>
                 <div>
                     {% for post in blog_posts %}
                     <a href="{% url 'blog_post_detail' post.pk %}"
-                        class="d-flex align-items-center p-3 text-white text-decoration-none"
-                        style="border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.2s; background: rgba(0,0,0,0.2);">
+                        class="d-flex align-items-center p-3 text-decoration-none post-item"
+                        style="border-bottom: 1px solid rgba(255,255,255,0.03); transition: 0.2s;">
                         <img src="{{ post.image_url }}"
-                            style="height: 50px; width: 50px; object-fit: cover; border-radius: 8px; margin-right: 15px;">
-                        <div>
-                            <h6 class="m-0 font-weight-bold" style="font-size: 0.95rem;">{{ post.title }}</h6>
-                            <small class="text-white-50">Read Article <i
-                                    class="fas fa-arrow-right ml-1 small"></i></small>
+                            style="height: 40px; width: 40px; object-fit: cover; border-radius: 8px; margin-right: 15px; background: #333;">
+                        <div style="overflow: hidden;">
+                            <h6 class="m-0 font-weight-bold text-white text-truncate" style="font-size: 0.9rem;">
+
+                                {{ post.title }}</h6>
+                            <small class="text-white-50">Read More</small>
                         </div>
                     </a>
                     {% endfor %}
@@ -329,134 +511,70 @@
             </div>
             {% endif %}
 
-            <!-- SERVER SUPPORT CTA -->
-            <div class="glass-card position-relative overflow-hidden"
-                style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 182, 212, 0.05) 100%); border: 1px solid rgba(16, 185, 129, 0.3);">
-
-                <!-- Pulse Glow Effect -->
-                <div
-                    style="position: absolute; top: -50%; right: -50%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(16,185,129,0.4) 0%, transparent 70%); filter: blur(40px); opacity: 0.5;">
-                </div>
-
-                <div class="d-flex justify-content-between align-items-center mb-3 position-relative">
-                    <h5 class="font-weight-bold m-0"
-                        style="color: #6ee7b7; text-shadow: 0 0 20px rgba(16,185,129,0.3);">Server Support</h5>
-                    <div
-                        style="background: rgba(16, 185, 129, 0.2); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-server" style="color: #34d399;"></i>
-                    </div>
-                </div>
-
-                <p class="text-white-50 small mb-4 position-relative">Keep the streams running. Your support pays for
-                    our bandwidth.</p>
-
-                <a href="#" class="btn btn-block font-weight-bold position-relative overflow-hidden"
-                    style="background: linear-gradient(to right, #10b981, #059669); color: white; border-radius: 8px; border: none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);">
-                    <span style="position: relative; z-index: 1;">Support Now</span>
-                </a>
-            </div>
         </div>
-
-        <!-- LIVE & UPCOMING (Span 12) -->
-        <div class="col-span-12 mt-4">
-            <div class="d-flex align-items-center mb-4">
-                <h4 class="font-weight-bold m-0 mr-3">Live & Upcoming</h4>
-                <div style="height: 1px; flex-grow: 1; background: rgba(255,255,255,0.1);"></div>
-            </div>
-
-            <div class="row">
-                {% if live_matches %}
-                {% for match in live_matches %}
-                <div class="col-md-4 mb-4">
-                    <a href="{% url 'match_detail' match.id %}" class="text-decoration-none">
-                        <div class="glass-card h-100 p-0 overflow-hidden position-relative">
-                            <div class="position-absolute top-0 right-0 p-3">
-                                <span class="modern-badge badge-live">LIVE</span>
-                            </div>
-                            <div class="p-4 mt-4">
-                                <h5 class="font-weight-bold text-white mb-1">{{ match.title }}</h5>
-                                <p class="text-white-50 small m-0">{{ match.league }}</p>
-                            </div>
-                            <div class="px-4 pb-4 mt-auto">
-                                <button class="btn-glass btn-sm w-100">Watch Now</button>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                {% endfor %}
-                {% endif %}
-
-                {% if matches %}
-                {% for match in matches %}
-                {% if not match.is_live %}
-                <div class="col-md-4 mb-4">
-                    <div class="glass-card h-100 p-4">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <span class="modern-badge badge-upcoming">UPCOMING</span>
-                            <small class="text-white-50">{{ match.date|date:"D, H:i" }}</small>
-                        </div>
-                        <h5 class="font-weight-bold text-white mb-2">{{ match.title }}</h5>
-                        <div class="mt-3 pt-3 border-top border-secondary">
-                            <small class="text-white-50">Starts in: <span id="cd-{{ match.id }}"
-                                    data-start-unix="{{ match.date|date:'U' }}"
-                                    data-start-iso="{{ match.date|date:'c' }}">Loading...</span></small>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-                {% endfor %}
-                {% endif %}
-            </div>
-        </div>
-
     </div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Countdown
-        function updateCountdowns() {
-            document.querySelectorAll('[id^=cd-]').forEach(el => {
-                // Hybrid Parsing: Try Unix first, then ISO
+        // Countdown Logic
+        const updateCountdowns = () => {
+            const now = new Date().getTime();
+
+            const elements = document.querySelectorAll('[id^="cd-"]');
+            if (elements.length === 0) return;
+
+            elements.forEach(el => {
                 const unix = el.getAttribute('data-start-unix');
                 const iso = el.getAttribute('data-start-iso');
-
                 let targetTime = 0;
 
-                if (unix && unix.length > 0) {
+                // Priority: Unix Timestamp -> ISO String
+                if (unix && unix.trim().length > 0) {
                     targetTime = parseInt(unix, 10) * 1000;
-                } else if (iso && iso.length > 0) {
+                } else if (iso && iso.trim().length > 0) {
                     targetTime = new Date(iso).getTime();
                 }
 
+                // Validation
                 if (!targetTime || isNaN(targetTime)) {
                     el.innerText = "TBA";
                     return;
                 }
 
-                const now = new Date().getTime();
+                // Calculation
                 const diff = targetTime - now;
 
                 if (diff > 0) {
                     const d = Math.floor(diff / (1000 * 60 * 60 * 24));
                     const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    const s = Math.floor((diff % (1000 * 60)) / 1000); // Added seconds
+                    const s = Math.floor((diff % (1000 * 60)) / 1000);
 
                     if (d > 0) {
-                        el.innerText = `${d}d ${h}h`;
+                        el.innerText = `${d}d ${h}h ${m}m`;
                     } else {
+                        // Show seconds when less than 24h
                         el.innerText = `${h}h ${m}m ${s}s`;
                     }
+                    el.style.color = ""; // Reset color
                 } else {
                     el.innerText = "Live Now";
-                    el.style.color = "#4ade80"; // Green for live
+                    el.style.color = "#ef4444"; // Red for live
                 }
             });
-        }
-        setInterval(updateCountdowns, 1000);
+        };
+
+        // Run immediately and then every second
         updateCountdowns();
+        setInterval(updateCountdowns, 1000);
     });
 </script>
 
+<style>
+    /* Scope hover effect for blog items */
+    .post-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+</style>
 {% endblock %}
