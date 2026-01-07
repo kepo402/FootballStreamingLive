@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 import requests
 import re
@@ -8,6 +8,22 @@ from matches.models import Match
 
 URL = "https://sportsonline.st/prog.txt"
 HEADERS = {"User-Agent": "Mozilla/5.0"}
+
+DAY_HEADERS = {
+    "MONDAY", "TUESDAY", "WEDNESDAY",
+    "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"
+}
+
+WEEKDAY_MAP = {
+    "MONDAY": 0,
+    "TUESDAY": 1,
+    "WEDNESDAY": 2,
+    "THURSDAY": 3,
+    "FRIDAY": 4,
+    "SATURDAY": 5,
+    "SUNDAY": 6,
+}
+
 
 class Command(BaseCommand):
     help = "Scrape matches from sportsonline text feed"
@@ -21,14 +37,28 @@ class Command(BaseCommand):
         utc_tz = pytz.UTC
         nigeria_tz = pytz.timezone("Africa/Lagos")
 
-        today = datetime.utcnow().date()
+        now_utc = datetime.now(utc_tz)
+        base_date = now_utc.date()
+        current_date = base_date
 
         saved = 0
 
         for line in lines:
             line = line.strip()
 
-            if not line or "|" not in line:
+            if not line:
+                continue
+
+            # ---- Detect explicit day headers ----
+            upper_line = line.upper()
+            if upper_line in DAY_HEADERS:
+                today_weekday = base_date.weekday()
+                target_weekday = WEEKDAY_MAP[upper_line]
+                delta_days = (target_weekday - today_weekday) % 7
+                current_date = base_date + timedelta(days=delta_days)
+                continue
+
+            if "|" not in line:
                 continue
 
             try:
@@ -36,7 +66,6 @@ class Command(BaseCommand):
             except ValueError:
                 continue
 
-            # Extract time
             time_match = re.match(r"^(\d{1,2}:\d{2})\s+(.*)$", left)
             if not time_match:
                 continue
@@ -44,12 +73,11 @@ class Command(BaseCommand):
             time_part = time_match.group(1)
             title = time_match.group(2).strip()
 
-            # Optional filtering
             if "Basketball:" in title:
                 continue
 
             match_time = datetime.strptime(time_part, "%H:%M").time()
-            match_dt = datetime.combine(today, match_time)
+            match_dt = datetime.combine(current_date, match_time)
 
             # FEED IS UTC → CONVERT TO NIGERIA
             utc_dt = utc_tz.localize(match_dt)
@@ -64,8 +92,9 @@ class Command(BaseCommand):
                 }
             )
 
-            saved += 1
+            if created:
+                saved += 1
 
         self.stdout.write(
-            self.style.SUCCESS(f"Saved/updated {saved} matches")
+            self.style.SUCCESS(f"Saved {saved} new matches")
         )

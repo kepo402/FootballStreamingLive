@@ -1,6 +1,6 @@
 import os
 import django
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 import requests
 import re
@@ -14,6 +14,22 @@ from matches.models import Match
 URL = "https://sportsonline.st/prog.txt"
 HEADERS = {"User-Agent": "Mozilla/5.0"}
 
+DAY_HEADERS = {
+    "MONDAY", "TUESDAY", "WEDNESDAY",
+    "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"
+}
+
+WEEKDAY_MAP = {
+    "MONDAY": 0,
+    "TUESDAY": 1,
+    "WEDNESDAY": 2,
+    "THURSDAY": 3,
+    "FRIDAY": 4,
+    "SATURDAY": 5,
+    "SUNDAY": 6,
+}
+
+
 def scrape_matches():
     r = requests.get(URL, headers=HEADERS, timeout=15)
     r.raise_for_status()
@@ -23,14 +39,28 @@ def scrape_matches():
     nigeria_tz = pytz.timezone("Africa/Lagos")
     utc_tz = pytz.UTC
 
-    today = datetime.utcnow().date()  # IMPORTANT: use UTC date
+    now_utc = datetime.now(utc_tz)
+    base_date = now_utc.date()
+    current_date = base_date
 
     saved = 0
 
     for line in lines:
         line = line.strip()
 
-        if not line or "|" not in line:
+        if not line:
+            continue
+
+        # ---- Detect explicit day headers ----
+        upper_line = line.upper()
+        if upper_line in DAY_HEADERS:
+            today_weekday = base_date.weekday()
+            target_weekday = WEEKDAY_MAP[upper_line]
+            delta_days = (target_weekday - today_weekday) % 7
+            current_date = base_date + timedelta(days=delta_days)
+            continue
+
+        if "|" not in line:
             continue
 
         try:
@@ -38,7 +68,7 @@ def scrape_matches():
         except ValueError:
             continue
 
-        # Extract time
+        # Extract time and title
         time_match = re.match(r"^(\d{1,2}:\d{2})\s+(.*)$", left)
         if not time_match:
             continue
@@ -49,9 +79,8 @@ def scrape_matches():
         if "Basketball:" in title:
             continue
 
-        # ---- TIME HANDLING (CORRECT) ----
         match_time = datetime.strptime(time_part, "%H:%M").time()
-        match_dt = datetime.combine(today, match_time)
+        match_dt = datetime.combine(current_date, match_time)
 
         utc_dt = utc_tz.localize(match_dt)
         nigeria_dt = utc_dt.astimezone(nigeria_tz)
@@ -65,9 +94,10 @@ def scrape_matches():
             }
         )
 
-        saved += 1
+        if created:
+            saved += 1
 
-    print(f"Saved/updated {saved} matches")
+    print(f"Saved {saved} new matches")
 
 
 if __name__ == "__main__":
